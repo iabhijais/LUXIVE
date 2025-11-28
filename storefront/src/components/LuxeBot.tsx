@@ -93,7 +93,7 @@ const LuxeBot = ({ isOpen, onClose, products }: { isOpen: boolean, onClose: () =
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                         placeholder="Ask for advice..."
-                        className="flex-1 bg-gray-50 text-sm px-4 py-2 rounded-full focus:outline-none focus:ring-1 focus:ring-black"
+                        className="flex-1 bg-gray-50 text-base md:text-sm px-4 py-2 rounded-full focus:outline-none focus:ring-1 focus:ring-black"
                     />
                     <button
                         onClick={handleSend}
