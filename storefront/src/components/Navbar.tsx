@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Search, User, ShoppingBag, Menu, X } from 'lucide-react';
+import { Search, User, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
 
@@ -20,12 +20,13 @@ const Navbar = () => {
         <nav className={`sticky top-0 z-40 w-full transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-white py-4'}`}>
             <div className="container mx-auto px-4 md:px-8 flex items-center justify-between">
                 <button
-                    className="md:hidden relative w-10 h-10 flex items-center justify-center z-50"
+                    className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 z-50 group"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     aria-label="Toggle menu"
                 >
-                    <Menu className={`w-6 h-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-0 rotate-90 scale-50' : 'opacity-100 rotate-0 scale-100'}`} />
-                    <X className={`w-6 h-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-50'}`} />
+                    <span className={`w-6 h-0.5 bg-black transition-all duration-300 ease-in-out ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+                    <span className={`w-6 h-0.5 bg-black transition-all duration-300 ease-in-out ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
+                    <span className={`w-6 h-0.5 bg-black transition-all duration-300 ease-in-out ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
                 </button>
 
                 <Link href="/" className="flex items-center cursor-pointer gap-2 md:gap-3">
