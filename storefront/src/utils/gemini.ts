@@ -1,4 +1,4 @@
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_ID || "AIzaSyAGvdes5MThZ8CLkmJHl_IqLBn2CPwJWdA"; // API Key injected at runtime
+const apiKey = process.env.NEXT_PUBLIC_GEMINI_ID; // API Key from env var
 
 export const callGemini = async (prompt: string, systemInstruction = "") => {
     if (!apiKey) {
@@ -8,7 +8,7 @@ export const callGemini = async (prompt: string, systemInstruction = "") => {
 
     try {
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
             {
                 method: 'POST',
                 headers: {
