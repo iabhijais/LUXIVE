@@ -8,16 +8,11 @@ export const callGemini = async (prompt: string, systemInstruction = "") => {
             body: JSON.stringify({ prompt, systemInstruction }),
         });
 
-        if (!response.ok) {
-            console.warn(`Gemini API Route error: ${response.status}`);
-            return "Sorry, I'm having trouble connecting to the luxury network right now. Please try again later.";
-        }
-
         const data = await response.json();
 
-        if (data.error) {
-            console.warn("Gemini API Error:", data.error);
-            return `Debug Error: ${data.error}`;
+        if (!response.ok || data.error) {
+            console.warn(`Gemini API Error: ${response.status}`, data.error);
+            return `Debug Error: ${data.error || response.statusText}`;
         }
 
         return data.text || "Sorry, I couldn't generate a response.";
