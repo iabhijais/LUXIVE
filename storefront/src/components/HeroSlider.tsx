@@ -61,8 +61,41 @@ const HeroSlider = () => {
     const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
     const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
+    // Touch swipe support
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > 50;
+        const isRightSwipe = distance < -50;
+
+        if (isLeftSwipe) {
+            nextSlide();
+        } else if (isRightSwipe) {
+            prevSlide();
+        }
+
+        setTouchStart(0);
+        setTouchEnd(0);
+    };
+
     return (
-        <div className="relative w-full h-[50vh] md:h-[70vh] bg-gray-100 overflow-hidden group">
+        <div
+            className="relative w-full h-[50vh] md:h-[70vh] bg-gray-100 overflow-hidden group"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
             {slides.map((slide, index) => (
                 <div
                     key={slide.id}
@@ -99,16 +132,16 @@ const HeroSlider = () => {
                 ))}
             </div>
 
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows - Visible on both Mobile and PC */}
             <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/10 text-white hover:bg-black/40 transition opacity-0 group-hover:opacity-100 z-20 hidden md:block"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/20 text-white hover:bg-black/40 transition z-20 backdrop-blur-sm"
             >
                 <ChevronLeft className="w-6 h-6" />
             </button>
             <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/10 text-white hover:bg-black/40 transition opacity-0 group-hover:opacity-100 z-20 hidden md:block"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/20 text-white hover:bg-black/40 transition z-20 backdrop-blur-sm"
             >
                 <ChevronRight className="w-6 h-6" />
             </button>
