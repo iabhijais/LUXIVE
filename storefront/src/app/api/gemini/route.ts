@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         }
 
         const response = await fetch(
-            https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
             {
                 method: 'POST',
                 headers: {
@@ -39,21 +39,21 @@ export async function POST(request: Request) {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(Gemini API HTTP error! status: , body: );
+            console.error(`Gemini API HTTP error! status: ${response.status}, body: ${errorText}`);
             return NextResponse.json(
-                { error: Gemini Upstream Error:  -  },
+                { error: `Gemini Upstream Error: ${response.status} - ${errorText}` },
                 { status: response.status }
             );
         }
 
         const data = await response.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
-        
+
         return NextResponse.json({ text });
     } catch (error) {
         console.error("Gemini API Route Error:", error);
         return NextResponse.json(
-            { error: Server Error:  },
+            { error: `Server Error: ${error instanceof Error ? error.message : String(error)}` },
             { status: 500 }
         );
     }
