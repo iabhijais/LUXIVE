@@ -1,34 +1,28 @@
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_ID; // API Key from env var
-
 export const callGemini = async (prompt: string, systemInstruction = "") => {
-    if (!apiKey) {
-        console.warn("Gemini API Key is missing. Returning mock response.");
-        return "I can't connect to the fashion network right now (API Key missing), but I think this would look great with a monochrome outfit!";
-    }
-
     try {
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    systemInstruction: { parts: [{ text: systemInstruction }] },
-                }),
-            }
-        );
+        const response = await fetch('/api/gemini', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ prompt, systemInstruction }),
+        });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            console.warn(`Gemini API Route error: ${response.status}`);
+            return "Sorry, I'm having trouble connecting to the luxury network right now. Please try again later.";
         }
 
         const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+
+        if (data.error) {
+            console.warn("Gemini API Error:", data.error);
+            return "Sorry, I'm having trouble connecting to the luxury network right now. Please try again later.";
+        }
+
+        return data.text || "Sorry, I couldn't generate a response.";
     } catch (error) {
-        console.error("Gemini API Error:", error);
+        console.error("Gemini Client Error:", error);
         return "Sorry, I'm having trouble connecting to the luxury network right now. Please try again later.";
     }
 };
