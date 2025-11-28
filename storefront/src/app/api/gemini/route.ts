@@ -40,7 +40,10 @@ export async function POST(request: Request) {
         if (!response.ok) {
             const errorText = await response.text();
             console.error(`Gemini API HTTP error! status: ${response.status}, body: ${errorText}`);
-            throw new Error(`HTTP error! status: ${response.status}`);
+            return NextResponse.json(
+                { error: `Gemini Upstream Error: ${response.status} - ${errorText}` },
+                { status: response.status }
+            );
         }
 
         const data = await response.json();
@@ -50,7 +53,7 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error("Gemini API Route Error:", error);
         return NextResponse.json(
-            { error: 'Failed to process request' },
+            { error: `Server Error: ${error instanceof Error ? error.message : String(error)}` },
             { status: 500 }
         );
     }

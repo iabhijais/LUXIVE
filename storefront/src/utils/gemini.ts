@@ -17,7 +17,7 @@ export const callGemini = async (prompt: string, systemInstruction = "") => {
 
         if (data.error) {
             console.warn("Gemini API Error:", data.error);
-            return "Sorry, I'm having trouble connecting to the luxury network right now. Please try again later.";
+            return `Debug Error: ${data.error}`;
         }
 
         return data.text || "Sorry, I couldn't generate a response.";
