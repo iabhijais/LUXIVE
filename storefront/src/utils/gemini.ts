@@ -1,4 +1,4 @@
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyDfDZ2xV5SWtDZ0WtqqOTVrBJekd4sU3vI"; // API Key injected at runtime
+const apiKey = process.env.NEXT_PUBLIC_GEMINI_ID || "AIzaSyDfDZ2xV5SWtDZ0WtqqOTVrBJekd4sU3vI"; // API Key injected at runtime
 
 export const callGemini = async (prompt: string, systemInstruction = "") => {
     if (!apiKey) {
