@@ -99,11 +99,16 @@ const Navbar = () => {
                                             View Profile
                                         </Link>
                                         <button
-                                            onClick={async () => {
+                                            onClick={async (e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
                                                 try {
                                                     const { createClient } = await import('@/utils/supabase/client');
                                                     const supabase = createClient();
-                                                    await supabase.auth.signOut();
+                                                    const { error } = await supabase.auth.signOut();
+                                                    if (error) {
+                                                        console.error('Sign out error:', error);
+                                                    }
                                                     localStorage.removeItem('cart');
                                                     setIsUserMenuOpen(false);
                                                     window.location.href = '/login';
@@ -112,7 +117,7 @@ const Navbar = () => {
                                                     window.location.href = '/login';
                                                 }
                                             }}
-                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
                                         >
                                             Sign Out
                                         </button>
