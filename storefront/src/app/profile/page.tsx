@@ -890,18 +890,20 @@ export default function ProfilePage() {
                                 <ShoppingBag className="w-4 h-4" /> Continue Shopping
                             </button>
                             <button
+                                type="button"
                                 onClick={async () => {
+                                    console.log('Profile Sign Out clicked!');
                                     try {
-                                        await supabase.auth.signOut();
+                                        await supabase.auth.signOut({ scope: 'global' });
+                                        console.log('Signed out!');
                                         localStorage.removeItem('cart');
-                                        router.push('/login');
-                                        router.refresh();
+                                        window.location.href = '/login';
                                     } catch (error) {
                                         console.error('Sign out error:', error);
                                         window.location.href = '/login';
                                     }
                                 }}
-                                className="w-full py-3 px-4 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-all flex items-center justify-center gap-2"
+                                className="w-full py-3 px-4 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-all flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <LogOut className="w-4 h-4" /> Sign Out
                             </button>

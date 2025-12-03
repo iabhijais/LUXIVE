@@ -107,17 +107,14 @@ const Navbar = () => {
                                                 try {
                                                     const { createClient } = await import('@/utils/supabase/client');
                                                     const supabase = createClient();
-                                                    console.log('Signing out...');
-                                                    const { error } = await supabase.auth.signOut();
-                                                    if (error) {
-                                                        console.error('Sign out error:', error);
-                                                    }
+                                                    console.log('Signing out with global scope...');
+                                                    await supabase.auth.signOut({ scope: 'global' });
                                                     console.log('Signed out successfully');
                                                     localStorage.removeItem('cart');
                                                     setIsUserMenuOpen(false);
-                                                    window.location.href = '/login';
                                                 } catch (error) {
                                                     console.error('Sign out error:', error);
+                                                } finally {
                                                     window.location.href = '/login';
                                                 }
                                             }}
