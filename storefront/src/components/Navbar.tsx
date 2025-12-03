@@ -87,7 +87,7 @@ const Navbar = () => {
                                 </div>
 
                                 {isUserMenuOpen && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 border border-gray-100 z-50">
+                                    <div className="absolute right-0 top-full mt-2 w-48 bg-white shadow-xl rounded-md py-1 border border-gray-100 z-[9999]">
                                         <div className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100 truncate">
                                             {user.user_metadata?.full_name || user.email}
                                         </div>
@@ -99,16 +99,20 @@ const Navbar = () => {
                                             View Profile
                                         </Link>
                                         <button
+                                            type="button"
                                             onClick={async (e) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
+                                                console.log('Sign out clicked!');
                                                 try {
                                                     const { createClient } = await import('@/utils/supabase/client');
                                                     const supabase = createClient();
+                                                    console.log('Signing out...');
                                                     const { error } = await supabase.auth.signOut();
                                                     if (error) {
                                                         console.error('Sign out error:', error);
                                                     }
+                                                    console.log('Signed out successfully');
                                                     localStorage.removeItem('cart');
                                                     setIsUserMenuOpen(false);
                                                     window.location.href = '/login';
