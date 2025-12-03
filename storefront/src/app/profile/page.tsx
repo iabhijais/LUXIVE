@@ -891,8 +891,15 @@ export default function ProfilePage() {
                             </button>
                             <button
                                 onClick={async () => {
-                                    await supabase.auth.signOut();
-                                    window.location.href = '/login';
+                                    try {
+                                        await supabase.auth.signOut();
+                                        localStorage.removeItem('cart');
+                                        router.push('/login');
+                                        router.refresh();
+                                    } catch (error) {
+                                        console.error('Sign out error:', error);
+                                        window.location.href = '/login';
+                                    }
                                 }}
                                 className="w-full py-3 px-4 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-all flex items-center justify-center gap-2"
                             >

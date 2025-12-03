@@ -100,11 +100,17 @@ const Navbar = () => {
                                         </Link>
                                         <button
                                             onClick={async () => {
-                                                const { createClient } = await import('@/utils/supabase/client');
-                                                const supabase = createClient();
-                                                await supabase.auth.signOut();
-                                                setIsUserMenuOpen(false);
-                                                window.location.href = '/login';
+                                                try {
+                                                    const { createClient } = await import('@/utils/supabase/client');
+                                                    const supabase = createClient();
+                                                    await supabase.auth.signOut();
+                                                    localStorage.removeItem('cart');
+                                                    setIsUserMenuOpen(false);
+                                                    window.location.href = '/login';
+                                                } catch (error) {
+                                                    console.error('Sign out error:', error);
+                                                    window.location.href = '/login';
+                                                }
                                             }}
                                             className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
                                         >
@@ -147,10 +153,16 @@ const Navbar = () => {
                     )}
                     {user && (
                         <button onClick={async () => {
-                            const { createClient } = await import('@/utils/supabase/client');
-                            const supabase = createClient();
-                            await supabase.auth.signOut();
-                            window.location.href = '/login';
+                            try {
+                                const { createClient } = await import('@/utils/supabase/client');
+                                const supabase = createClient();
+                                await supabase.auth.signOut();
+                                localStorage.removeItem('cart');
+                                window.location.href = '/login';
+                            } catch (error) {
+                                console.error('Sign out error:', error);
+                                window.location.href = '/login';
+                            }
                         }} className="text-sm font-bold tracking-widest text-left text-red-600">SIGN OUT</button>
                     )}
                 </div>
