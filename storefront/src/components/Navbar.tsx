@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Search, User, ShoppingBag } from 'lucide-react';
+import { Search, User, ShoppingBag, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import SearchModal from './SearchModal';
 
 const Navbar = () => {
-    const { cart, toggleCart, user } = useCart();
+    const { cart, toggleCart, user, wishlist } = useCart();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [cartBounce, setCartBounce] = useState(false);
     const router = useRouter();
 
@@ -28,7 +30,7 @@ const Navbar = () => {
             const timer = setTimeout(() => setCartBounce(false), 500);
             return () => clearTimeout(timer);
         }
-    }, [cart.length]);
+    }, [cart.reduce((acc, item) => acc + item.quantity, 0)]);
 
     const handleUserClick = () => {
         if (user) {
@@ -64,7 +66,24 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex items-center space-x-4 md:space-x-6">
-                    <Search className="w-5 h-5 cursor-pointer hover:text-gray-600" />
+                    <div className="relative group cursor-pointer" onClick={() => setIsSearchOpen(true)}>
+                        <Search className="w-5 h-5 text-gray-600 transition-all duration-200 group-hover:scale-110 group-hover:text-black" />
+                        <span className="absolute top-full pt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <span className="bg-black text-white text-[10px] uppercase font-bold px-2 py-1 rounded whitespace-nowrap">Search</span>
+                        </span>
+                    </div>
+
+                    <div className="relative group cursor-pointer hidden md:block" onClick={toggleCart}>
+                        <Heart className="w-5 h-5 text-gray-600 transition-all duration-200 group-hover:scale-110 group-hover:text-red-500" />
+                        {wishlist.length > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-black text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                                {wishlist.length}
+                            </span>
+                        )}
+                        <span className="absolute top-full pt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <span className="bg-black text-white text-[10px] uppercase font-bold px-2 py-1 rounded whitespace-nowrap">Wishlist</span>
+                        </span>
+                    </div>
 
                     <div className="relative hidden md:block">
                         {user ? (
@@ -124,55 +143,68 @@ const Navbar = () => {
                                         </button>
                                     </div>
                                 )}
+                                <span className="absolute top-full pt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                    <span className="bg-black text-white text-[10px] uppercase font-bold px-2 py-1 rounded whitespace-nowrap">Account</span>
+                                </span>
                             </div>
                         ) : (
-                            <User
-                                className="w-5 h-5 cursor-pointer hover:text-gray-600"
-                                onClick={handleUserClick}
-                            />
+                            <div className="relative group cursor-pointer" onClick={handleUserClick}>
+                                <User className="w-5 h-5 text-gray-600 transition-all duration-200 group-hover:scale-110 group-hover:text-black" />
+                                <span className="absolute top-full pt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                    <span className="bg-black text-white text-[10px] uppercase font-bold px-2 py-1 rounded whitespace-nowrap">Login</span>
+                                </span>
+                            </div>
                         )}
                     </div>
 
                     <div
                         id="cart-icon-container"
-                        className={`relative cursor-pointer ${cartBounce ? 'animate-bounce-once' : ''}`}
+                        className={`relative group cursor-pointer ${cartBounce ? 'animate-bounce-once' : ''}`}
                         onClick={toggleCart}
                     >
-                        <ShoppingBag className="w-5 h-5 hover:text-gray-600" />
+                        <ShoppingBag className="w-5 h-5 hover:text-black transition-transform duration-200 group-hover:scale-110 text-gray-600" />
                         {cart.length > 0 && (
                             <span className="absolute -top-2 -right-2 bg-black text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
-                                {cart.length}
+                                {cart.reduce((acc, item) => acc + item.quantity, 0)}
                             </span>
                         )}
+                        <span className="absolute top-full pt-2 right-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <span className="bg-black text-white text-[10px] uppercase font-bold px-2 py-1 rounded whitespace-nowrap">Cart</span>
+                        </span>
                     </div>
                 </div>
             </div>
 
-            {isMenuOpen && (
-                <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 p-4 md:hidden flex flex-col space-y-4 animate-in slide-in-from-top-2">
-                    <Link href="/" className="text-sm font-bold tracking-widest">HOME</Link>
-                    <Link href="/collections" className="text-sm font-bold tracking-widest">COLLECTIONS</Link>
-                    <Link href="/shop/sneakers" className="text-sm font-bold tracking-widest">SNEAKERS</Link>
-                    <Link href="/contact" className="text-sm font-bold tracking-widest">CONTACT</Link>
-                    {!user && (
-                        <Link href="/login" className="text-sm font-bold tracking-widest text-gray-600">LOGIN</Link>
-                    )}
-                    {user && (
-                        <button onClick={async () => {
-                            try {
-                                const { createClient } = await import('@/utils/supabase/client');
-                                const supabase = createClient();
-                                await supabase.auth.signOut();
-                                localStorage.removeItem('cart');
-                                window.location.href = '/login';
-                            } catch (error) {
-                                console.error('Sign out error:', error);
-                                window.location.href = '/login';
-                            }
-                        }} className="text-sm font-bold tracking-widest text-left text-red-600">SIGN OUT</button>
-                    )}
-                </div>
-            )}
+            {
+                isMenuOpen && (
+                    <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 p-4 md:hidden flex flex-col space-y-4 animate-in slide-in-from-top-2">
+                        <Link href="/" className="text-sm font-bold tracking-widest">HOME</Link>
+                        <Link href="/collections" className="text-sm font-bold tracking-widest">COLLECTIONS</Link>
+                        <Link href="/shop/sneakers" className="text-sm font-bold tracking-widest">SNEAKERS</Link>
+                        <button onClick={toggleCart} className="text-sm font-bold tracking-widest text-left">WISHLIST ({wishlist.length})</button>
+                        <Link href="/contact" className="text-sm font-bold tracking-widest">CONTACT</Link>
+                        {!user && (
+                            <Link href="/login" className="text-sm font-bold tracking-widest text-gray-600">LOGIN</Link>
+                        )}
+                        {user && (
+                            <button onClick={async () => {
+                                try {
+                                    const { createClient } = await import('@/utils/supabase/client');
+                                    const supabase = createClient();
+                                    await supabase.auth.signOut();
+                                    localStorage.removeItem('cart');
+                                    window.location.href = '/login';
+                                } catch (error) {
+                                    console.error('Sign out error:', error);
+                                    window.location.href = '/login';
+                                }
+                            }} className="text-sm font-bold tracking-widest text-left text-red-600">SIGN OUT</button>
+                        )}
+                    </div>
+                )
+            }
+
+            <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         </nav>
     );
 };

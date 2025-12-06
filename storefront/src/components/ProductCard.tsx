@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
 
@@ -23,13 +23,33 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
     const [isHovered, setIsHovered] = useState(false);
-    const { addToCart, animateAddToCart } = useCart();
+    const [showSizeSelector, setShowSizeSelector] = useState(false);
+    const { addToCart, animateAddToCart, wishlist, addToWishlist, removeFromWishlist } = useCart();
 
-    const handleQuickAdd = async (e: React.MouseEvent) => {
+    const isInWishlist = wishlist.some(p => p.id === product.id);
+
+    const toggleWishlist = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        
-        console.log("Quick Add clicked for:", product.title);
+        if (isInWishlist) {
+            removeFromWishlist(product.id);
+        } else {
+            addToWishlist(product);
+        }
+    };
+
+    const handleQuickAdd = async (e: React.MouseEvent, size?: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const needsSize = ['sneakers', 'shoes', 'luxury'].includes(product.category.toLowerCase());
+
+        if (needsSize && !size) {
+            setShowSizeSelector(true);
+            return;
+        }
+
+        console.log("Quick Add clicked for:", product.title, "Size:", size);
 
         // Get the product image element for animation
         const cardElement = e.currentTarget.closest('.group');
@@ -40,9 +60,12 @@ const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
             animateAddToCart(rect, product.image);
         }
 
-        await addToCart(product);
+        await addToCart(product, size);
+        setShowSizeSelector(false); // Close selector if open
         console.log("Product added to cart");
     };
+
+    const SIZES = ['UK 6', 'UK 7', 'UK 8', 'UK 9', 'UK 10', 'UK 11'];
 
     return (
         <div
@@ -63,13 +86,40 @@ const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
                         {product.badge}
                     </span>
                 )}
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 hidden md:block">
+                <div className="absolute top-2 right-2 z-10 group/wishlist">
                     <button
-                        onClick={handleQuickAdd}
-                        className="w-full bg-white text-black border border-black py-2 text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors"
+                        onClick={toggleWishlist}
+                        className="p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 transition-colors shadow-sm"
                     >
-                        Quick Add
+                        <Heart
+                            className={`w-5 h-5 ${isInWishlist ? 'fill-red-500 text-red-500' : 'text-black'}`}
+                        />
                     </button>
+                    <span className="absolute top-1/2 -left-2 -translate-x-full -translate-y-1/2 bg-black text-white text-[10px] uppercase font-bold px-2 py-1 rounded opacity-0 group-hover/wishlist:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                        {isInWishlist ? 'Remove' : 'Add to Wishlist'}
+                    </span>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 hidden md:block z-20">
+                    {!showSizeSelector ? (
+                        <button
+                            onClick={(e) => handleQuickAdd(e)}
+                            className="w-full bg-white text-black border border-black py-2 text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors"
+                        >
+                            Quick Add
+                        </button>
+                    ) : (
+                        <div className="bg-white p-2 border border-gray-200 shadow-lg grid grid-cols-3 gap-1 animate-in fade-in zoom-in-95 duration-200">
+                            {SIZES.map(size => (
+                                <button
+                                    key={size}
+                                    onClick={(e) => handleQuickAdd(e, size)}
+                                    className="text-[10px] font-bold py-1 border border-gray-100 hover:border-black hover:bg-black hover:text-white transition-colors uppercase"
+                                >
+                                    {size}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -97,12 +147,27 @@ const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
                     </button>
                 )}
 
-                <button
-                    onClick={handleQuickAdd}
-                    className="mt-3 w-full md:hidden bg-black text-white py-2 text-xs font-bold uppercase"
-                >
-                    Add to Cart
-                </button>
+                <div className="relative mt-3 w-full md:hidden">
+                    {showSizeSelector && (
+                        <div className="absolute bottom-full left-0 w-full bg-white p-2 border border-gray-200 shadow-lg grid grid-cols-3 gap-1 mb-1 z-30 animate-in fade-in slide-in-from-bottom-2">
+                            {SIZES.map(size => (
+                                <button
+                                    key={size}
+                                    onClick={(e) => handleQuickAdd(e, size)}
+                                    className="text-[10px] font-bold py-1 border border-gray-100 hover:border-black hover:bg-black hover:text-white transition-colors uppercase"
+                                >
+                                    {size}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                    <button
+                        onClick={(e) => handleQuickAdd(e)}
+                        className="w-full bg-black text-white py-2 text-xs font-bold uppercase"
+                    >
+                        {showSizeSelector ? 'Select Size' : 'Add to Cart'}
+                    </button>
+                </div>
             </div>
         </div>
     );

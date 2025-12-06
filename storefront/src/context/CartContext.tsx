@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -22,18 +23,27 @@ type CartItem = Product & {
 type CartContextType = {
     cart: CartItem[];
     addToCart: (product: Product, size?: string) => Promise<void>;
+    updateQuantity: (index: number, change: number) => Promise<void>;
     removeFromCart: (index: number) => Promise<void>;
+    deleteFromCart: (index: number) => Promise<void>;
+    clearCart: () => Promise<void>;
+    wishlist: Product[];
+    addToWishlist: (product: Product) => void;
+    removeFromWishlist: (productId: number) => void;
+    moveToCart: (product: Product) => void;
     isCartOpen: boolean;
     toggleCart: () => void;
     user: User | null;
     animateAddToCart: (sourceRect: DOMRect, imageSrc: string) => void;
     removingIndex: number | null;
+    isClearing: boolean;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
+    const [wishlist, setWishlist] = useState<Product[]>([]);
     const [user, setUser] = useState<User | null>(null);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const supabase = createClient();
@@ -55,6 +65,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
                 console.error('Error checking user:', error);
                 const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
                 setCart(localCart); // Local cart lao
+            }
+
+            // Load Wishlist from LocalStorage
+            try {
+                const localWishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                setWishlist(localWishlist);
+            } catch (err) {
+                console.error("Error loading wishlist:", err);
             }
         };
         checkUser();
@@ -83,7 +101,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     // 2. Database se Cart lana
     const fetchDbCart = async (userId: string) => {
         console.log("Fetching cart from DB for user:", userId);
-        
+
         const { data, error } = await supabase
             .from('cart_items')
             .select('*')
@@ -152,54 +170,154 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     // 4. Add to Cart Function
     const addToCart = async (product: Product, size?: string) => {
         console.log("Adding to cart:", product.title, "User:", user?.email);
-        
-        // Immediately update UI (optimistic update)
-        const newItem = { ...product, size, quantity: 1 };
-        setCart(prevCart => [...prevCart, newItem]);
-        // Don't auto-open cart drawer
-        
-        if (user) {
-            // DB Add
-            const { data, error } = await supabase
-                .from('cart_items')
-                .insert({ user_id: user.id, product_id: product.id, quantity: 1, size })
-                .select();
 
-            if (error) {
-                console.error("Error adding to cart:", JSON.stringify(error, null, 2));
-                // Keep the optimistic update, item is already in cart state
+        // Check if item already exists in cart
+        const existingItemIndex = cart.findIndex(item => item.id === product.id && item.size === size);
+
+        if (existingItemIndex > -1) {
+            // Item exists, increment quantity
+            const updatedCart = [...cart];
+            updatedCart[existingItemIndex].quantity += 1;
+            setCart(updatedCart);
+
+            if (user) {
+                // DB Update Quantity
+                const item = updatedCart[existingItemIndex];
+                if (item.cart_item_id) {
+                    const { error } = await supabase
+                        .from('cart_items')
+                        .update({ quantity: item.quantity })
+                        .eq('id', item.cart_item_id);
+
+                    if (error) console.error("Error updating quantity in DB:", error);
+                }
             } else {
-                console.log("Added to DB successfully:", data);
-                // Refresh to get the cart_item_id
-                await fetchDbCart(user.id);
+                // Local Update
+                localStorage.setItem('cart', JSON.stringify(updatedCart));
             }
         } else {
-            // Local Add - save to localStorage
-            console.log("Adding to local cart (no user)");
-            const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
-            currentCart.push(newItem);
-            localStorage.setItem('cart', JSON.stringify(currentCart));
+            // New Item
+            const newItem = { ...product, size, quantity: 1 };
+            setCart(prevCart => [...prevCart, newItem]);
+
+            if (user) {
+                // DB Add
+                const { data, error } = await supabase
+                    .from('cart_items')
+                    .insert({ user_id: user.id, product_id: product.id, quantity: 1, size })
+                    .select();
+
+                if (error) {
+                    console.error("Error adding to cart:", JSON.stringify(error, null, 2));
+                } else {
+                    console.log("Added to DB successfully:", data);
+                    // Refresh to get the cart_item_id
+                    await fetchDbCart(user.id);
+                }
+            } else {
+                // Local Add - save to localStorage
+                console.log("Adding to local cart (no user)");
+                const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                currentCart.push(newItem);
+                localStorage.setItem('cart', JSON.stringify(currentCart));
+            }
         }
     };
+
+    // Update Quantity
+    const updateQuantity = async (index: number, change: number) => {
+        const updatedCart = [...cart];
+        const item = updatedCart[index];
+        const newQuantity = item.quantity + change;
+
+        // Prevent quantity < 1
+        if (newQuantity < 1) return;
+
+        updatedCart[index].quantity = newQuantity;
+        setCart(updatedCart);
+
+        if (user && item.cart_item_id) {
+            // DB Update
+            const { error } = await supabase
+                .from('cart_items')
+                .update({ quantity: newQuantity })
+                .eq('id', item.cart_item_id);
+
+            if (error) console.error("Error updating quantity:", error);
+        } else {
+            // Local Update
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+        }
+    };
+
+    // Wishlist Functions
+    const addToWishlist = (product: Product) => {
+        setWishlist(prev => {
+            if (prev.some(p => p.id === product.id)) return prev;
+            const newWishlist = [...prev, product];
+            localStorage.setItem('wishlist', JSON.stringify(newWishlist));
+            return newWishlist;
+        });
+    };
+
+    const removeFromWishlist = (productId: number) => {
+        setWishlist(prev => {
+            const newWishlist = prev.filter(p => p.id !== productId);
+            localStorage.setItem('wishlist', JSON.stringify(newWishlist));
+            return newWishlist;
+        });
+    };
+
+    const moveToCart = (product: Product) => {
+        addToCart(product);
+        removeFromWishlist(product.id);
+    };
+
+    const [isClearing, setIsClearing] = useState(false);
+
+    const clearCart = async () => {
+        setIsClearing(true);
+        // Wait for animation
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        setCart([]);
+        setIsClearing(false);
+
+        if (user) {
+            const { error } = await supabase
+                .from('cart_items')
+                .delete()
+                .eq('user_id', user.id);
+            if (error) console.error("Error clearing DB cart:", error);
+        } else {
+            localStorage.removeItem('cart');
+        }
+    };
+
 
     // Track removing items for animation
     const [removingIndex, setRemovingIndex] = useState<number | null>(null);
 
     const removeFromCart = async (index: number) => {
         console.log("Removing item at index:", index);
-        
+
         // Start remove animation
         setRemovingIndex(index);
-        
+
         // Wait for animation to complete
         await new Promise(resolve => setTimeout(resolve, 300));
-        
+
         const itemToRemove = cart[index];
-        
+
+        // Auto-move to Wishlist (User Requirement)
+        if (itemToRemove) {
+            addToWishlist(itemToRemove);
+        }
+
         // Optimistic UI update
         setCart(prevCart => prevCart.filter((_, i) => i !== index));
         setRemovingIndex(null);
-        
+
         if (user && itemToRemove?.cart_item_id) {
             // Remove from DB
             const { error } = await supabase
@@ -214,6 +332,27 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             }
         } else if (!user) {
             // Update localStorage
+            const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+            currentCart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(currentCart));
+        }
+    };
+
+    // Explicit Delete (No Wishlist Move)
+    const deleteFromCart = async (index: number) => {
+        console.log("Permanently deleting item at index:", index);
+        setRemovingIndex(index);
+
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const itemToRemove = cart[index];
+        setCart(prevCart => prevCart.filter((_, i) => i !== index));
+        setRemovingIndex(null);
+
+        if (user && itemToRemove?.cart_item_id) {
+            const { error } = await supabase.from('cart_items').delete().eq('id', itemToRemove.cart_item_id);
+            if (error) console.error("Error deleting from cart:", error);
+        } else if (!user) {
             const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
             currentCart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(currentCart));
@@ -289,7 +428,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, isCartOpen, toggleCart, user, animateAddToCart, removingIndex }}>
+        <CartContext.Provider value={{ cart, addToCart, updateQuantity, removeFromCart, deleteFromCart, clearCart, wishlist, addToWishlist, removeFromWishlist, moveToCart, isCartOpen, toggleCart, user, animateAddToCart, removingIndex, isClearing }}>
             {children}
 
             {/* Flying Image Animation */}
