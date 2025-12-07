@@ -12,7 +12,13 @@ export const callGemini = async (prompt: string, systemInstruction = "") => {
 
         if (!response.ok || data.error) {
             console.warn(`Gemini API Error: ${response.status}`, data.error);
-            return `Debug Error: ${data.error || response.statusText}`;
+
+            const errorString = JSON.stringify(data.error || "");
+            if (response.status === 429 || errorString.includes("quota") || errorString.includes("429")) {
+                return "I'm currently assisting many clients. Please allow me a moment and try asking again in a few seconds. ✨";
+            }
+
+            return "My connection to the fashion archives is briefly interrupted. Please try again.";
         }
 
         return data.text || "Sorry, I couldn't generate a response.";
