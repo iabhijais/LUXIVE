@@ -18,7 +18,7 @@ export default function ContactPage() {
         setIsSubmitting(true);
 
         // Construct WhatsApp message
-        const phoneNumber = "916289135345";
+        const phoneNumber = "918149409265";
         const message = `Hello, I saw your website and have a query:\n\n*Name:* ${formData.firstName} ${formData.lastName}\n*Email:* ${formData.email}\n\n*Message:*\n${formData.message}`;
 
         // Open WhatsApp with encoded text using link click trick
@@ -64,7 +64,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500 mb-1">Call us at</p>
-                                        <a href="tel:+916289135345" className="font-medium hover:text-gray-600">+91 62891 35345</a>
+                                        <a href="tel:+918149409265" className="font-medium hover:text-gray-600">+91 81494 09265</a>
                                     </div>
                                 </div>
 

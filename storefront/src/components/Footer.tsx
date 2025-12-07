@@ -93,7 +93,7 @@ const Footer = () => {
                             <a href="https://linktr.ee/luxiveworld?utm_source=linktree_profile_share&ltsid=b647bf37-f1d0-4cd6-a41f-081b55e66c90" target="_blank" rel="noopener noreferrer">
                                 <Globe className="w-5 h-5 hover:text-black cursor-pointer transition-colors" />
                             </a>
-                            <a href="https://wa.me/916289135345?text=Hello%20LUXIVE%2C%20I%20would%20like%20to%20join%20the%20community" target="_blank" rel="noopener noreferrer">
+                            <a href="https://wa.me/918149409265?text=Hello%20LUXIVE%2C%20I%20would%20like%20to%20join%20the%20community" target="_blank" rel="noopener noreferrer">
                                 <MessageCircle className="w-5 h-5 hover:text-black cursor-pointer transition-colors" />
                             </a>
                         </div>

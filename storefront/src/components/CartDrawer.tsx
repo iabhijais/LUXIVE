@@ -11,7 +11,7 @@ const CartDrawer = () => {
 
     const handleCheckout = () => {
         // REPLACE WITH YOUR WHATSAPP NUMBER (International format without +)
-        const SELLER_PHONE = "916289135345";
+        const SELLER_PHONE = "918149409265";
 
         let message = `*NEW ORDER REQUEST*\n\n`;
         message += `Hello, I would like to place an order:\n\n`;
