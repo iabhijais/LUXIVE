@@ -3,6 +3,7 @@ export const COLLECTIONS = [
     { id: 'luxury', title: 'LUXURY', subtitle: 'High-End Fashion', link: '/shop/luxury' },
     { id: 'perfumes_her', title: 'PERFUMES FOR HER', subtitle: 'Elegant Fragrances', link: '/shop/perfumes_her' },
     { id: 'watches', title: 'LUXURY WATCHES', subtitle: 'Timeless Elegance', link: '/shop/watches' },
+    { id: 'sweatshirts', title: 'PREMIUM SWEATSHIRTS', subtitle: 'Cozy Luxury', link: '/shop/sweatshirts' },
 ];
 
 export const PRODUCTS = [
@@ -224,5 +225,87 @@ export const PRODUCTS = [
         image: "/bleu-de-chanel.png",
         hoverImage: "/bleu-de-chanel.png",
         badge: "Classic"
+    },
+
+    // Sweatshirts
+    {
+        id: 51,
+        title: "RALPH LAURE N PREMIUM V NECK SWEATER",
+        price: 2200,
+        originalPrice: 9999,
+        category: "sweatshirts",
+        image: "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=800",
+        hoverImage: "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=800",
+        badge: ""
+    },
+    {
+        id: 52,
+        title: "RAPLH LAUREN PREMIUM IMPORTED SWEATER",
+        price: 1950,
+        originalPrice: 9999,
+        category: "sweatshirts",
+        image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800",
+        hoverImage: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800",
+        badge: ""
+    },
+    {
+        id: 53,
+        title: "ZAR A PREMIUM KNITTED STIRPES PULL OVER BROWN",
+        price: 2000,
+        originalPrice: 9999,
+        category: "sweatshirts",
+        image: "https://images.unsplash.com/photo-1620799139507-2a54f7c3dd05?auto=format&fit=crop&q=80&w=800",
+        hoverImage: "https://images.unsplash.com/photo-1620799139507-2a54f7c3dd05?auto=format&fit=crop&q=80&w=800",
+        badge: ""
+    },
+    {
+        id: 54,
+        title: "LOUIS_VUITTON PRINT PREMIUM TURKISH OVERSIZED SWEATER",
+        price: 3000,
+        originalPrice: 9999,
+        category: "sweatshirts",
+        image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=800",
+        hoverImage: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=800",
+        badge: "Premium"
+    },
+    {
+        id: 55,
+        title: "ZAR A PREMIUM KNITTED POLO SWEATER",
+        price: 1950,
+        originalPrice: 9999,
+        category: "sweatshirts",
+        image: "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&q=80&w=800",
+        hoverImage: "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&q=80&w=800",
+        badge: ""
+    },
+    {
+        id: 56,
+        title: "ZAR A PREMIUM KNITTED POLO SWEATER BROWN",
+        price: 1950,
+        originalPrice: 9999,
+        category: "sweatshirts",
+        image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=80&w=800",
+        hoverImage: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=80&w=800",
+        badge: ""
+    },
+    {
+        id: 57,
+        title: "ZAR A PREMIUM KNITTED POLO",
+        price: 1950,
+        originalPrice: 9999,
+        category: "sweatshirts",
+        image: "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&q=80&w=800",
+        hoverImage: "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&q=80&w=800",
+        badge: ""
+    },
+    {
+        id: 58,
+        title: "RALPH LAURE N PREMIUM V NECK SWEATER",
+        price: 2200,
+        originalPrice: 9999,
+        category: "sweatshirts",
+        image: "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=800",
+        hoverImage: "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=800",
+        badge: ""
     },
 ];

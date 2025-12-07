@@ -38,6 +38,7 @@ export default function Home() {
   const perfumesHer = PRODUCTS.filter(p => p.category === 'perfumes_her');
   const perfumesHim = PRODUCTS.filter(p => p.category === 'perfumes_him');
   const watches = PRODUCTS.filter(p => p.category === 'watches');
+  const sweatshirts = PRODUCTS.filter(p => p.category === 'sweatshirts');
 
   return (
     <main className="min-h-screen bg-white">
@@ -137,6 +138,26 @@ export default function Home() {
           <Link href="/shop/perfumes_him" className="inline-flex items-center text-sm font-bold border-b border-black pb-1 hover:text-gray-600 hover:border-gray-600 transition">
             VIEW ALL PERFUMES FOR HIM <ArrowRight className="ml-2 w-4 h-4" />
           </Link>
+        </div>
+      </section>
+
+      {/* Sweatshirts Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">PREMIUM SWEATSHIRTS</h2>
+            <p className="text-gray-500 text-sm uppercase tracking-widest">Cozy Luxury</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 md:gap-8">
+            {sweatshirts.map(product => (
+              <ProductCard key={product.id} product={product} onGetTips={handleGetStyleTips} />
+            ))}
+          </div>
+          <div className="mt-12 text-center">
+            <Link href="/shop/sweatshirts" className="bg-black text-white px-8 py-3 text-sm font-bold tracking-widest hover:bg-gray-800 transition">
+              VIEW ALL SWEATSHIRTS
+            </Link>
+          </div>
         </div>
       </section>
 

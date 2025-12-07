@@ -53,9 +53,8 @@ const Navbar = () => {
                     <span className={`w-6 h-0.5 bg-black transition-all duration-300 ease-in-out ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
                 </button>
 
-                <Link href="/" className="flex items-center cursor-pointer gap-2 md:gap-3">
-                    <img src="/luxive-brand-logo.svg" alt="LUXIVE Logo" className="h-10 md:h-16 w-auto object-contain" />
-                    <span className="text-xl md:text-2xl font-bold tracking-[0.2em] text-gray-900">LUXIVE</span>
+                <Link href="/" className="flex items-center cursor-pointer">
+                    <img src="/luxive-text-black.png" alt="LUXIVE" className="h-24 md:h-56 w-auto object-contain -my-11 md:-my-20 -ml-3 md:-ml-6" />
                 </Link>
 
                 <div className="hidden md:flex space-x-8 text-sm font-medium tracking-widest text-gray-800">

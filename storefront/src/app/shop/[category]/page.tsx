@@ -37,6 +37,7 @@ export default function CategoryPage() {
             case 'luxury': return 'LUXURY FASHION';
             case 'perfumes_her': return 'PERFUMES FOR HER';
             case 'perfumes_him': return 'PERFUMES FOR HIM';
+            case 'sweatshirts': return 'PREMIUM SWEATSHIRTS';
             default: return cat.replace('_', ' ').toUpperCase();
         }
     };

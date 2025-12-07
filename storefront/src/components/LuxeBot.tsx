@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, X, Send } from 'lucide-react';
+import { Sparkles, X, Send, MessageCircle } from 'lucide-react';
 import { callGemini } from '../utils/gemini';
 
 const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () => void, products: any[] }>(({ isOpen, onClose, products }, ref) => {
@@ -57,7 +57,18 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
                     </div>
                     <span className="font-bold text-sm tracking-wide">LuxeBot Stylist</span>
                 </div>
-                <button onClick={onClose}><X className="w-4 h-4 text-gray-300 hover:text-white" /></button>
+                <div className="flex items-center gap-3">
+                    <a
+                        href="https://wa.me/918149409265?text=Hello%20LUXIVE%20Stylist%2C%20I%20need%20assistance"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white hover:text-green-400 transition-colors"
+                        title="Chat on WhatsApp"
+                    >
+                        <MessageCircle className="w-5 h-5" />
+                    </a>
+                    <button onClick={onClose}><X className="w-4 h-4 text-gray-300 hover:text-white" /></button>
+                </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">

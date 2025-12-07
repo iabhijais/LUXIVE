@@ -6,12 +6,31 @@ import { Mail, Phone, MapPin, Send, Loader2 } from 'lucide-react';
 export default function ContactPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        message: ''
+    });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // Construct WhatsApp message
+        const phoneNumber = "916289135345";
+        const message = `Hello, I saw your website and have a query:\n\n*Name:* ${formData.firstName} ${formData.lastName}\n*Email:* ${formData.email}\n\n*Message:*\n${formData.message}`;
+
+        // Open WhatsApp with encoded text using link click trick
+        const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
         setIsSubmitting(false);
         setSubmitted(true);
     };
@@ -36,7 +55,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500 mb-1">Email us at</p>
-                                        <a href="mailto:support@luxive.com" className="font-medium hover:text-gray-600">support@luxive.com</a>
+                                        <a href="mailto:contact@luxive.com" className="font-medium hover:text-gray-600">contact@luxive.com</a>
                                     </div>
                                 </div>
                                 <div className="flex items-start space-x-4">
@@ -45,18 +64,10 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500 mb-1">Call us at</p>
-                                        <a href="tel:+919876543210" className="font-medium hover:text-gray-600">+91 98765 43210</a>
+                                        <a href="tel:+916289135345" className="font-medium hover:text-gray-600">+91 62891 35345</a>
                                     </div>
                                 </div>
-                                <div className="flex items-start space-x-4">
-                                    <div className="bg-white p-3 rounded-full shadow-sm">
-                                        <MapPin className="w-5 h-5 text-gray-900" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500 mb-1">Visit us</p>
-                                        <p className="font-medium">123 Luxury Avenue, Fashion District<br />Mumbai, Maharashtra 400001</p>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -86,6 +97,8 @@ export default function ContactPage() {
                                             id="firstName"
                                             type="text"
                                             required
+                                            value={formData.firstName}
+                                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-0 transition-colors bg-gray-50 focus:bg-white"
                                             placeholder="John"
                                         />
@@ -96,6 +109,8 @@ export default function ContactPage() {
                                             id="lastName"
                                             type="text"
                                             required
+                                            value={formData.lastName}
+                                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-0 transition-colors bg-gray-50 focus:bg-white"
                                             placeholder="Doe"
                                         />
@@ -108,6 +123,8 @@ export default function ContactPage() {
                                         id="email"
                                         type="email"
                                         required
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-0 transition-colors bg-gray-50 focus:bg-white"
                                         placeholder="john@example.com"
                                     />
@@ -119,6 +136,8 @@ export default function ContactPage() {
                                         id="message"
                                         required
                                         rows={4}
+                                        value={formData.message}
+                                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                         className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-0 transition-colors bg-gray-50 focus:bg-white resize-none"
                                         placeholder="How can we help you?"
                                     />
@@ -132,7 +151,7 @@ export default function ContactPage() {
                                     {isSubmitting ? (
                                         <>
                                             <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                            Sending...
+                                            Redirecting...
                                         </>
                                     ) : (
                                         <>
