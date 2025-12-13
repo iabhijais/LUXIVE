@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { User } from '@supabase/supabase-js';
+import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 type Product = {
     id: number;
@@ -78,7 +78,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         checkUser();
 
         // Auth State Change Listener (Login/Logout detect karne ke liye)
-        const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+        const { data: authListener } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
             const currentUser = session?.user || null;
             setUser(currentUser);
 
