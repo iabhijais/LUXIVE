@@ -1063,20 +1063,7 @@ export const PRODUCTS = [
             "/PREMIUM WATCHES MEN/Emporio Arman_i Chronograph Premium Watch 11649 X 3999/69354a4a277b11.jpg"
         ]
     },
-    {
-        "id": 403,
-        "title": "Emporio Armani Chronograph Premium Watch",
-        "price": 4499,
-        "originalPrice": 12000,
-        "category": "watches_him",
-        "image": "/PREMIUM WATCHES MEN/Emporio Arman_i Chronograph Premium Watch 12000 X 4499/69354a4a26acc0.jpg",
-        "hoverImage": "/PREMIUM WATCHES MEN/Emporio Arman_i Chronograph Premium Watch 12000 X 4499/69354a4a277b11 (1).jpg",
-        "badge": "Mega Sale",
-        "gallery": [
-            "/PREMIUM WATCHES MEN/Emporio Arman_i Chronograph Premium Watch 12000 X 4499/69354a4a26acc0.jpg",
-            "/PREMIUM WATCHES MEN/Emporio Arman_i Chronograph Premium Watch 12000 X 4499/69354a4a277b11 (1).jpg"
-        ]
-    },
+
     {
         "id": 404,
         "title": "Jacob N Co Bugatti Transparent Green Premium W199",
@@ -1287,19 +1274,7 @@ export const PRODUCTS = [
             "/PREMIUM WATCHES WOMEN/Emporio Arman i AR1486 Ceramic For Her 11156 X 4599/69301924718ee3.jpg"
         ]
     },
-    {
-        "id": 503,
-        "title": "Emporio Armani Classic",
-        "price": 3499,
-        "originalPrice": 8200,
-        "category": "watches_her",
-        "image": "/PREMIUM WATCHES WOMEN/Emporio Arman_i Classic 8200 X 3499/6932aa38eaebe0.jpg",
-        "hoverImage": "/PREMIUM WATCHES WOMEN/Emporio Arman_i Classic 8200 X 3499/6932aa38eaebe0.jpg",
-        "badge": "Mega Sale",
-        "gallery": [
-            "/PREMIUM WATCHES WOMEN/Emporio Arman_i Classic 8200 X 3499/6932aa38eaebe0.jpg"
-        ]
-    },
+
     {
         "id": 504,
         "title": "Emporio Armani Classic",
