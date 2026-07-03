@@ -78,7 +78,7 @@ const ProductGallery = ({ images, title }: ProductGalleryProps) => {
                     <img
                         src={selectedMedia}
                         alt={title}
-                        className="h-full w-full object-contain object-center p-4 transition-all duration-500 ease-in-out mix-blend-multiply md:p-8"
+                        className="h-full w-full object-contain object-center p-4 transition-all duration-500 ease-in-out mix-blend-multiply dark:mix-blend-normal md:p-8"
                     />
                 )}
             </div>
