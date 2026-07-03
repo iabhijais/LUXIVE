@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Sparkles, Heart } from 'lucide-react';
+import { Heart, ShoppingBag, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
 import type { Product } from '../types/product';
@@ -11,16 +11,20 @@ interface ProductCardProps {
     onGetTips?: (product: Product) => void;
 }
 
+const SIZES = ['UK 6', 'UK 7', 'UK 8', 'UK 9', 'UK 10', 'UK 11'];
+
 const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
     const [isHovered, setIsHovered] = useState(false);
     const [showSizeSelector, setShowSizeSelector] = useState(false);
     const { addToCart, animateAddToCart, wishlist, addToWishlist, removeFromWishlist } = useCart();
 
     const isInWishlist = wishlist.some(p => p.id === product.id);
+    const discount = Math.max(0, Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100));
 
     const toggleWishlist = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
+
         if (isInWishlist) {
             removeFromWishlist(product.id);
         } else {
@@ -39,9 +43,6 @@ const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
             return;
         }
 
-        console.log("Quick Add clicked for:", product.title, "Size:", size);
-
-        // Get the product image element for animation
         const cardElement = e.currentTarget.closest('.group');
         const imgElement = cardElement?.querySelector('img');
 
@@ -51,59 +52,59 @@ const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
         }
 
         await addToCart(product, size);
-        setShowSizeSelector(false); // Close selector if open
-        console.log("Product added to cart");
+        setShowSizeSelector(false);
     };
 
-    const SIZES = ['UK 6', 'UK 7', 'UK 8', 'UK 9', 'UK 10', 'UK 11'];
-
     return (
-        <div
-            className="group relative bg-white border border-transparent hover:border-gray-100 transition-all duration-300 pb-4"
+        <article
+            className="group relative overflow-hidden rounded-[8px] border border-black/[0.08] bg-white shadow-[0_18px_44px_rgba(18,16,13,0.05)] transition duration-300 hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_26px_70px_rgba(18,16,13,0.12)]"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="relative aspect-square overflow-hidden bg-gray-50 mb-3">
-                <Link href={`/product/${product.id}`}>
+            <div className="relative aspect-[4/5] overflow-hidden bg-[#f3f1eb]">
+                <Link href={`/product/${product.id}`} className="block h-full" aria-label={`View ${product.title}`}>
                     <img
                         src={isHovered && product.hoverImage ? product.hoverImage : product.image}
                         alt={product.title}
-                        className="w-full h-full object-contain p-2 object-center group-hover:scale-110 transition-transform duration-700 mix-blend-multiply"
+                        className="h-full w-full object-contain p-5 transition duration-700 group-hover:scale-105 md:p-7"
                     />
                 </Link>
+
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/18 to-transparent" />
+
                 {product.badge && (
-                    <span className="absolute top-2 left-2 bg-black text-white text-[10px] uppercase font-bold px-2 py-1 tracking-wider">
+                    <span className="absolute left-3 top-3 rounded-full bg-[#12100d] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
                         {product.badge}
                     </span>
                 )}
-                <div className="absolute top-2 right-2 z-10 group/wishlist">
-                    <button
-                        onClick={toggleWishlist}
-                        className="p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 transition-colors shadow-sm"
-                    >
-                        <Heart
-                            className={`w-5 h-5 ${isInWishlist ? 'fill-red-500 text-red-500' : 'text-black'}`}
-                        />
-                    </button>
-                    <span className="absolute top-1/2 -left-2 -translate-x-full -translate-y-1/2 bg-black text-white text-[10px] uppercase font-bold px-2 py-1 rounded opacity-0 group-hover/wishlist:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                        {isInWishlist ? 'Remove' : 'Add to Wishlist'}
-                    </span>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 hidden md:block z-20">
+
+                <button
+                    type="button"
+                    onClick={toggleWishlist}
+                    className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white/[0.88] text-black shadow-sm transition hover:scale-105 hover:bg-white"
+                    aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                >
+                    <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+                </button>
+
+                <div className="absolute inset-x-3 bottom-3 hidden translate-y-3 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100 md:block">
                     {!showSizeSelector ? (
                         <button
+                            type="button"
                             onClick={(e) => handleQuickAdd(e)}
-                            className="w-full bg-white text-black border border-black py-2 text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors"
+                            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-white px-4 text-xs font-bold uppercase tracking-[0.18em] text-[#12100d] shadow-[0_14px_32px_rgba(18,16,13,0.16)] transition hover:bg-[#12100d] hover:text-white"
                         >
+                            <ShoppingBag className="h-4 w-4" />
                             Quick Add
                         </button>
                     ) : (
-                        <div className="bg-white p-2 border border-gray-200 shadow-lg grid grid-cols-3 gap-1 animate-in fade-in zoom-in-95 duration-200">
+                        <div className="grid grid-cols-3 gap-1 rounded-[8px] border border-black/10 bg-white p-2 shadow-[0_14px_32px_rgba(18,16,13,0.16)]">
                             {SIZES.map(size => (
                                 <button
+                                    type="button"
                                     key={size}
                                     onClick={(e) => handleQuickAdd(e, size)}
-                                    className="text-[10px] font-bold py-1 border border-gray-100 hover:border-black hover:bg-black hover:text-white transition-colors uppercase"
+                                    className="min-h-9 rounded-md border border-black/10 text-[10px] font-bold uppercase tracking-wide transition hover:border-black hover:bg-[#12100d] hover:text-white"
                                 >
                                     {size}
                                 </button>
@@ -113,38 +114,49 @@ const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
                 </div>
             </div>
 
-            <div className="px-2 text-center">
-                <Link href={`/product/${product.id}`}>
-                    <h3 className="text-sm text-gray-800 font-medium line-clamp-2 mb-2 h-10 group-hover:underline decoration-1 underline-offset-4">
+            <div className="space-y-3 p-4">
+                <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-black/46">
+                        {product.category.replace('_', ' ')}
+                    </span>
+                    {discount > 0 && (
+                        <span className="rounded-full bg-[#f4efe4] px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[#5b471d]">
+                            {discount}% off
+                        </span>
+                    )}
+                </div>
+
+                <Link href={`/product/${product.id}`} className="block">
+                    <h3 className="min-h-11 text-sm font-semibold leading-5 text-[#12100d] transition group-hover:text-[#5b471d] md:text-[15px]">
                         {product.title}
                     </h3>
                 </Link>
-                <div className="flex items-center justify-center gap-2 text-sm mb-3">
-                    <span className="font-bold">Rs. {product.price.toLocaleString()}</span>
-                    <span className="text-gray-400 line-through text-xs">Rs. {product.originalPrice.toLocaleString()}</span>
-                    <span className="text-green-600 text-xs font-bold">
-                        ({Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off)
-                    </span>
+
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                    <span className="text-base font-bold text-[#12100d]">Rs. {product.price.toLocaleString()}</span>
+                    <span className="text-xs font-medium text-black/38 line-through">Rs. {product.originalPrice.toLocaleString()}</span>
                 </div>
 
-                {/* AI Feature Button */}
                 {onGetTips && (
                     <button
+                        type="button"
                         onClick={() => onGetTips(product)}
-                        className="text-xs uppercase font-bold text-gray-800 border border-gray-200 bg-gray-50 px-3 py-1.5 rounded-full hover:bg-black hover:text-white hover:border-black transition-all duration-300 flex items-center justify-center mx-auto gap-1"
+                        className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-black/10 bg-[#fbfbf8] px-3 text-xs font-bold uppercase tracking-[0.16em] text-[#12100d] transition hover:border-[#12100d] hover:bg-[#12100d] hover:text-white"
                     >
-                        <Sparkles className="w-3 h-3" /> Get Style Tips
+                        <Sparkles className="h-3.5 w-3.5" />
+                        Style With AI
                     </button>
                 )}
 
-                <div className="relative mt-3 w-full md:hidden">
+                <div className="relative md:hidden">
                     {showSizeSelector && (
-                        <div className="absolute bottom-full left-0 w-full bg-white p-2 border border-gray-200 shadow-lg grid grid-cols-3 gap-1 mb-1 z-30 animate-in fade-in slide-in-from-bottom-2">
+                        <div className="absolute bottom-full left-0 z-30 mb-2 grid w-full grid-cols-3 gap-1 rounded-[8px] border border-black/10 bg-white p-2 shadow-xl">
                             {SIZES.map(size => (
                                 <button
+                                    type="button"
                                     key={size}
                                     onClick={(e) => handleQuickAdd(e, size)}
-                                    className="text-[10px] font-bold py-1 border border-gray-100 hover:border-black hover:bg-black hover:text-white transition-colors uppercase"
+                                    className="min-h-9 rounded-md border border-black/10 text-[10px] font-bold uppercase"
                                 >
                                     {size}
                                 </button>
@@ -152,14 +164,16 @@ const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
                         </div>
                     )}
                     <button
+                        type="button"
                         onClick={(e) => handleQuickAdd(e)}
-                        className="w-full bg-black text-white py-2 text-xs font-bold uppercase"
+                        className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#12100d] px-4 text-xs font-bold uppercase tracking-[0.18em] text-white"
                     >
+                        <ShoppingBag className="h-4 w-4" />
                         {showSizeSelector ? 'Select Size' : 'Add to Cart'}
                     </button>
                 </div>
             </div>
-        </div>
+        </article>
     );
 };
 

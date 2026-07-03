@@ -1,32 +1,53 @@
 import React from 'react';
-import { ArrowRight, Mail, ShoppingBag } from 'lucide-react';
+import { LockKeyhole, MessageCircle, PackageCheck, ShieldCheck } from 'lucide-react';
+
+const FEATURES = [
+    {
+        icon: ShieldCheck,
+        title: 'Curated Selection',
+        copy: 'Premium sneakers, watches and perfumes edited for a sharper luxury shopping experience.',
+    },
+    {
+        icon: MessageCircle,
+        title: 'Concierge Support',
+        copy: 'Talk to the LUXIVE team on WhatsApp for fit, scent and availability guidance.',
+    },
+    {
+        icon: PackageCheck,
+        title: 'Nationwide Delivery',
+        copy: 'Fast dispatch support across India with order confirmation before fulfillment.',
+    },
+    {
+        icon: LockKeyhole,
+        title: 'Secure Checkout',
+        copy: 'Checkout is assisted and confirmed through trusted payment and WhatsApp flows.',
+    },
+];
 
 const Features = () => (
-    <div className="py-12 border-t border-b border-gray-100 bg-gray-50">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center">
-                <div className="bg-white p-4 rounded-full shadow-sm mb-4">
-                    <ArrowRight className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-sm uppercase tracking-widest mb-2">Free Shipping</h3>
-                <p className="text-gray-500 text-sm">Free shipping all over India on prepaid orders.</p>
+    <section className="border-y border-black/10 bg-white py-14 md:py-20">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
+            <div className="mb-10 max-w-2xl">
+                <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.28em] text-[#9d7b32]">Why LUXIVE</p>
+                <h2 className="text-3xl font-semibold tracking-[-0.045em] text-[#12100d] md:text-5xl">Built for premium shopping confidence.</h2>
             </div>
-            <div className="flex flex-col items-center">
-                <div className="bg-white p-4 rounded-full shadow-sm mb-4">
-                    <Mail className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-sm uppercase tracking-widest mb-2">24/7 Support</h3>
-                <p className="text-gray-500 text-sm">We are available on email to answer your questions.</p>
-            </div>
-            <div className="flex flex-col items-center">
-                <div className="bg-white p-4 rounded-full shadow-sm mb-4">
-                    <ShoppingBag className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-sm uppercase tracking-widest mb-2">Secure Payment</h3>
-                <p className="text-gray-500 text-sm">Your payment information is processed securely.</p>
+            <div className="grid gap-4 md:grid-cols-4">
+                {FEATURES.map(feature => {
+                    const Icon = feature.icon;
+
+                    return (
+                        <div key={feature.title} className="rounded-[8px] border border-black/10 bg-[#fbfbf8] p-5 transition hover:-translate-y-1 hover:bg-white hover:shadow-[0_20px_55px_rgba(18,16,13,0.09)]">
+                            <div className="mb-6 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#12100d] text-white">
+                                <Icon className="h-5 w-5" />
+                            </div>
+                            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#12100d]">{feature.title}</h3>
+                            <p className="mt-3 text-sm leading-6 text-black/56">{feature.copy}</p>
+                        </div>
+                    );
+                })}
             </div>
         </div>
-    </div>
+    </section>
 );
 
 export default Features;

@@ -81,15 +81,18 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
     const newArrivals = PRODUCTS.filter(p => p.badge === 'New').slice(0, 4);
 
     return (
-        <div className="fixed inset-0 z-[100] bg-white/98 flex flex-col animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[100] flex flex-col bg-[#fbfbf8] animate-in fade-in duration-200">
             {/* Header / Search Bar */}
-            <div className="container mx-auto px-4 md:px-8 pt-6 pb-4 border-b border-gray-50">
+            <div className="safe-top border-b border-black/10 bg-white/[0.86] px-4 pb-4 pt-5 md:px-8">
+                <div className="mx-auto max-w-7xl">
                 <div className="flex items-center justify-end mb-6">
                     <button
+                        type="button"
                         onClick={onClose}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-black transition-colors hover:bg-black hover:text-white"
+                        aria-label="Close search"
                     >
-                        <X className="w-6 h-6 text-black" />
+                        <X className="h-6 w-6" />
                     </button>
                 </div>
 
@@ -102,14 +105,15 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                             placeholder="Search for products, brands and more"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            className="w-full text-2xl md:text-3xl font-medium bg-transparent border-none py-3 pl-10 focus:outline-none placeholder:text-gray-300 transition-colors"
+                            className="w-full border-none bg-transparent py-3 pl-10 text-2xl font-semibold tracking-[-0.03em] text-[#12100d] transition-colors placeholder:text-black/28 focus:outline-none md:text-3xl"
                         />
                     </form>
+                </div>
                 </div>
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 overflow-y-auto bg-gray-50/30">
+            <div className="flex-1 overflow-y-auto">
                 <div className="container mx-auto px-4 md:px-8 pt-8 pb-20 max-w-7xl">
 
                     {/* Empty Query State */}
@@ -119,7 +123,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                             {/* Left Column: Recent Searches */}
                             <div className="lg:col-span-4 space-y-8">
                                 {recentSearches.length > 0 && (
-                                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                                    <div className="rounded-[8px] border border-black/10 bg-white p-6 shadow-[0_18px_45px_rgba(18,16,13,0.06)]">
                                         <div className="flex items-center justify-between mb-4">
                                             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Recent Searches</h3>
                                             <button
@@ -134,7 +138,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                                                 <button
                                                     key={index}
                                                     onClick={() => setQuery(term)}
-                                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors group text-left"
+                                                className="group flex w-full items-center gap-3 rounded-[8px] p-3 text-left transition-colors hover:bg-[#fbfbf8]"
                                                 >
                                                     <Clock className="w-4 h-4 text-gray-300 group-hover:text-black transition-colors" />
                                                     <span className="text-gray-600 group-hover:text-black font-medium">{term}</span>
@@ -145,14 +149,14 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                                 )}
 
                                 {/* Trending Searches (Static for now) */}
-                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                                <div className="rounded-[8px] border border-black/10 bg-white p-6 shadow-[0_18px_45px_rgba(18,16,13,0.06)]">
                                     <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Trending Now</h3>
                                     <div className="flex flex-wrap gap-2">
                                         {['Sneakers', 'Luxury Watches', 'Perfumes', 'Jordan', 'Nike'].map(tag => (
                                             <button
                                                 key={tag}
                                                 onClick={() => setQuery(tag)}
-                                                className="px-3 py-1.5 bg-gray-50 hover:bg-black hover:text-white border border-gray-100 rounded-full text-sm font-medium transition-all"
+                                                className="rounded-full border border-black/10 bg-[#fbfbf8] px-3 py-1.5 text-sm font-semibold transition-all hover:bg-[#12100d] hover:text-white"
                                             >
                                                 {tag}
                                             </button>
@@ -175,9 +179,9 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                                                 key={product.id}
                                                 href={`/product/${product.id}`}
                                                 onClick={() => handleResultClick(product.title)}
-                                                className="group bg-white p-3 rounded-xl border border-gray-100 hover:shadow-md transition-all"
+                                                className="group rounded-[8px] border border-black/10 bg-white p-3 transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(18,16,13,0.1)]"
                                             >
-                                                <div className="aspect-square bg-gray-50 rounded-lg overflow-hidden mb-3">
+                                                <div className="mb-3 aspect-square overflow-hidden rounded-[8px] bg-[#fbfbf8]">
                                                     <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                                                 </div>
                                                 <h4 className="font-bold text-sm truncate">{product.title}</h4>
@@ -190,7 +194,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                                 {/* New Arrivals */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-6">
-                                        <Sparkles className="w-5 h-5 text-purple-500" />
+                                        <Sparkles className="w-5 h-5 text-[#9d7b32]" />
                                         <h3 className="text-lg font-bold">New Arrivals</h3>
                                     </div>
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -199,9 +203,9 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                                                 key={product.id}
                                                 href={`/product/${product.id}`}
                                                 onClick={() => handleResultClick(product.title)}
-                                                className="group bg-white p-3 rounded-xl border border-gray-100 hover:shadow-md transition-all"
+                                                className="group rounded-[8px] border border-black/10 bg-white p-3 transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(18,16,13,0.1)]"
                                             >
-                                                <div className="aspect-square bg-gray-50 rounded-lg overflow-hidden mb-3">
+                                                <div className="mb-3 aspect-square overflow-hidden rounded-[8px] bg-[#fbfbf8]">
                                                     <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                                                 </div>
                                                 <h4 className="font-bold text-sm truncate">{product.title}</h4>
@@ -231,7 +235,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                                             onClick={() => handleResultClick(product.title)}
                                             className="group cursor-pointer block"
                                         >
-                                            <div className="aspect-square bg-gray-50 mb-4 overflow-hidden rounded-xl">
+                                            <div className="mb-4 aspect-square overflow-hidden rounded-[8px] bg-[#fbfbf8]">
                                                 <img
                                                     src={product.image}
                                                     alt={product.title}

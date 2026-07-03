@@ -19,26 +19,27 @@ const ProductGallery = ({ images, title }: ProductGalleryProps) => {
     if (!images || images.length === 0) return null;
 
     return (
-        <div className="flex flex-col-reverse md:flex-row gap-4">
+        <div className="flex flex-col-reverse gap-4 md:flex-row">
             {/* Thumbnails */}
-            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto no-scrollbar md:w-24 md:h-[600px] shrink-0 py-1 px-1">
+            <div className="no-scrollbar flex shrink-0 gap-3 overflow-x-auto px-1 py-1 md:h-[620px] md:w-24 md:flex-col md:overflow-y-auto">
                 {images.map((media, index) => {
                     const isVid = isVideo(media);
                     const isSelected = selectedMedia === media;
 
                     return (
                         <button
+                            type="button"
                             key={index}
                             onClick={() => setSelectedMedia(media)}
                             onMouseEnter={() => setSelectedMedia(media)}
-                            className={`group relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-xl overflow-hidden transition-all duration-300 ease-out 
+                            className={`group relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-[8px] border border-black/10 bg-white transition-all duration-300 ease-out md:h-24 md:w-24
                                 ${isSelected
-                                    ? 'ring-2 ring-black scale-95 shadow-md z-10'
-                                    : 'hover:scale-110 hover:shadow-xl hover:z-20 opacity-90 hover:opacity-100'
+                                    ? 'z-10 scale-95 ring-2 ring-black shadow-md'
+                                    : 'opacity-90 hover:z-20 hover:scale-105 hover:shadow-xl hover:opacity-100'
                                 }`}
                         >
                             {isVid ? (
-                                <div className="w-full h-full bg-gray-100 flex items-center justify-center relative">
+                                <div className="relative flex h-full w-full items-center justify-center bg-[#fbfbf8]">
                                     <video
                                         src={media}
                                         className="w-full h-full object-cover opacity-80"
@@ -62,7 +63,7 @@ const ProductGallery = ({ images, title }: ProductGalleryProps) => {
             </div>
 
             {/* Main Display */}
-            <div className="flex-1 bg-gray-50 rounded-2xl overflow-hidden relative aspect-[4/5] md:aspect-auto md:h-[600px] shadow-sm">
+            <div className="relative aspect-[4/5] flex-1 overflow-hidden rounded-[8px] border border-black/10 bg-[#fbfbf8] shadow-[0_22px_70px_rgba(18,16,13,0.08)] md:aspect-auto md:h-[620px]">
                 {isVideo(selectedMedia) ? (
                     <video
                         src={selectedMedia}
@@ -77,7 +78,7 @@ const ProductGallery = ({ images, title }: ProductGalleryProps) => {
                     <img
                         src={selectedMedia}
                         alt={title}
-                        className="w-full h-full object-contain object-center transition-all duration-500 ease-in-out mix-blend-multiply"
+                        className="h-full w-full object-contain object-center p-4 transition-all duration-500 ease-in-out mix-blend-multiply md:p-8"
                     />
                 )}
             </div>

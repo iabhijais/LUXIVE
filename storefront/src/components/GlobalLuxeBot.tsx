@@ -34,9 +34,10 @@ export default function GlobalLuxeBot() {
             <button
                 ref={buttonRef}
                 onClick={() => setIsLuxeBotOpen(!isLuxeBotOpen)}
-                className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform z-40 group"
+                className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-4 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#12100d] text-white shadow-[0_18px_45px_rgba(18,16,13,0.28)] transition hover:-translate-y-0.5 md:right-6 group"
+                aria-label={isLuxeBotOpen ? 'Close LuxeBot' : 'Open LuxeBot'}
             >
-                <Sparkles className="w-6 h-6 group-hover:animate-spin" />
+                <Sparkles className="h-6 w-6 text-[#d4b45f] transition group-hover:scale-110" />
             </button>
 
             <LuxeBot

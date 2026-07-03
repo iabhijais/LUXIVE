@@ -10,33 +10,33 @@ const StyleTipsModal = ({ product, isOpen, onClose, tips, loading }: { product: 
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-            <div className="relative bg-white w-full max-w-lg p-8 rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-300 border border-gray-100">
-                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
+            <div className="absolute inset-0 bg-black/64 backdrop-blur-sm" onClick={onClose} />
+            <div className="relative w-full max-w-lg rounded-[8px] border border-black/10 bg-white p-6 shadow-[0_24px_90px_rgba(18,16,13,0.24)] animate-in fade-in zoom-in-95 duration-300 md:p-8">
+                <button type="button" onClick={onClose} className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/[0.04] text-black/48 transition-colors hover:bg-black/10 hover:text-black" aria-label="Close style tips">
                     <X className="w-5 h-5" />
                 </button>
 
-                <div className="flex items-start gap-5 mb-8 border-b border-gray-100 pb-6">
-                    <div className="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden shrink-0 border border-gray-100 shadow-sm">
+                <div className="mb-8 flex items-start gap-5 border-b border-black/10 pb-6">
+                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-[8px] border border-black/10 bg-[#fbfbf8] shadow-sm">
                         <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
                     </div>
                     <div>
-                        <div className="flex items-center gap-2 text-black mb-2">
-                            <div className="bg-black text-white p-1 rounded-full">
-                                <Sparkles className="w-3 h-3 fill-current" />
+                        <div className="mb-2 flex items-center gap-2 text-black">
+                            <div className="rounded-full bg-[#12100d] p-1 text-[#d4b45f]">
+                                <Sparkles className="h-3 w-3" />
                             </div>
-                            <span className="text-xs font-bold uppercase tracking-[0.2em]">Luxive Stylist</span>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em]">LUXIVE Stylist</span>
                         </div>
-                        <h3 className="font-serif text-xl leading-tight text-gray-900">{product.title}</h3>
-                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{product.category}</p>
+                        <h3 className="text-xl font-semibold leading-tight tracking-[-0.03em] text-[#12100d]">{product.title}</h3>
+                        <p className="mt-1 text-xs uppercase tracking-wider text-black/44">{product.category}</p>
                     </div>
                 </div>
 
-                <div className="min-h-[200px] text-sm text-gray-600 leading-relaxed">
+                <div className="min-h-[200px] text-sm leading-relaxed text-black/66">
                     {loading ? (
-                        <div className="h-full flex flex-col items-center justify-center py-12 text-gray-400">
+                        <div className="flex h-full flex-col items-center justify-center py-12 text-black/42">
                             <Loader2 className="w-8 h-8 animate-spin mb-4 text-black" />
-                            <p className="text-xs uppercase tracking-widest font-medium text-gray-500">Curating your look...</p>
+                            <p className="text-xs font-bold uppercase tracking-[0.2em] text-black/48">Curating your look...</p>
                         </div>
                     ) : (
                         <div className="prose prose-sm max-w-none prose-p:mb-3 prose-ul:my-2 prose-li:my-1 prose-strong:text-black prose-strong:font-bold">
@@ -44,7 +44,7 @@ const StyleTipsModal = ({ product, isOpen, onClose, tips, loading }: { product: 
                                 components={{
                                     ul: ({ node, ...props }) => {
                                         void node;
-                                        return <ul className="list-disc pl-5 space-y-1 marker:text-gray-300" {...props} />;
+                                        return <ul className="list-disc space-y-1 pl-5 marker:text-[#9d7b32]" {...props} />;
                                     },
                                     li: ({ node, ...props }) => {
                                         void node;
@@ -63,10 +63,11 @@ const StyleTipsModal = ({ product, isOpen, onClose, tips, loading }: { product: 
                 </div>
 
                 {!loading && (
-                    <div className="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                    <div className="mt-8 flex justify-end border-t border-black/10 pt-6">
                         <button
+                            type="button"
                             onClick={onClose}
-                            className="bg-black text-white px-8 py-3 text-xs font-bold uppercase tracking-[0.15em] hover:bg-gray-800 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            className="min-h-12 rounded-full bg-[#12100d] px-8 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-black hover:shadow-xl"
                         >
                             Shop The Look
                         </button>

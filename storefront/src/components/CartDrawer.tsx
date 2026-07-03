@@ -38,38 +38,40 @@ const CartDrawer = () => {
     return (
         <>
             <div
-                className={`fixed inset-0 bg-black/50 z-50 transition-opacity duration-300 ${isCartOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                className={`fixed inset-0 z-[110] bg-black/62 transition-opacity duration-300 ${isCartOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 onClick={toggleCart}
             />
-            <div className={`fixed top-0 right-0 h-full w-[85vw] md:w-[400px] bg-white z-[60] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div className={`fixed right-0 top-0 z-[120] flex h-full w-[min(92vw,430px)] transform flex-col bg-[#fbfbf8] shadow-[0_24px_90px_rgba(18,16,13,0.24)] transition-transform duration-300 ease-out ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
 
                 {/* Header */}
-                <div className="p-4 border-b flex items-center justify-between">
+                <div className="safe-top flex items-center justify-between border-b border-black/10 bg-white p-4">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-lg font-bold uppercase tracking-widest">Cart ({cart.reduce((acc, item) => acc + item.quantity, 0)})</h2>
+                        <h2 className="text-lg font-bold uppercase tracking-[0.18em] text-[#12100d]">Cart ({cart.reduce((acc, item) => acc + item.quantity, 0)})</h2>
                         {cart.length > 0 && (
                             <button
+                                type="button"
                                 onClick={clearCart}
-                                className="flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-red-500 transition-colors uppercase tracking-wide group ml-4"
+                                className="group ml-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-black/36 transition-colors hover:text-red-500"
                             >
                                 <Trash2 className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
                                 Clear All
                             </button>
                         )}
                     </div>
-                    <button onClick={toggleCart}><X className="w-6 h-6 hover:rotate-90 transition-transform" /></button>
+                    <button type="button" onClick={toggleCart} className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/[0.04] transition hover:bg-black/10" aria-label="Close cart"><X className="w-5 h-5" /></button>
                 </div>
 
                 {/* Body (Scrollable) */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                <div className="flex-1 space-y-6 overflow-y-auto p-4">
                     {/* Cart Items */}
                     {cart.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center text-center text-gray-500 py-12">
+                        <div className="flex flex-col items-center justify-center py-12 text-center text-black/52">
                             <ShoppingBag className="w-12 h-12 mb-4 opacity-20" />
                             <p>Your cart is currently empty.</p>
                             <button
+                                type="button"
                                 onClick={toggleCart}
-                                className="mt-6 bg-black text-white px-6 py-3 text-sm font-bold uppercase tracking-widest hover:bg-gray-800"
+                                className="mt-6 min-h-12 rounded-full bg-[#12100d] px-6 text-sm font-bold uppercase tracking-[0.18em] text-white hover:bg-black"
                             >
                                 Start Shopping
                             </button>
@@ -79,26 +81,26 @@ const CartDrawer = () => {
                             {cart.map((item, idx) => (
                                 <div
                                     key={`${item.id}-${idx}`}
-                                    className={`flex gap-4 border-b border-gray-100 pb-4 transition-all duration-300 ${removingIndex === idx
+                                    className={`flex gap-4 border-b border-black/10 pb-4 transition-all duration-300 ${removingIndex === idx
                                         ? 'opacity-0 translate-x-full scale-95'
                                         : 'opacity-100 translate-x-0 scale-100'
                                         }`}
                                 >
                                     <Link href={`/product/${item.id}`} onClick={toggleCart} className="flex-shrink-0">
-                                        <img src={item.image} alt={item.title} className="w-20 h-20 object-cover bg-gray-50 rounded hover:opacity-80 transition-opacity" />
+                                        <img src={item.image} alt={item.title} className="h-20 w-20 rounded-[8px] bg-white object-cover transition-opacity hover:opacity-80" />
                                     </Link>
                                     <div className="flex-1">
                                         <Link href={`/product/${item.id}`} onClick={toggleCart}>
-                                            <h3 className="text-sm font-medium line-clamp-2 mb-1 hover:underline cursor-pointer">{item.title}</h3>
+                                            <h3 className="mb-1 line-clamp-2 cursor-pointer text-sm font-semibold text-[#12100d] hover:underline">{item.title}</h3>
                                         </Link>
                                         <div className="flex justify-between items-center mb-1">
-                                            <p className="text-gray-500 text-xs text-left">
+                                            <p className="text-left text-xs text-black/48">
                                                 {item.category}{item.size ? ` • Size: ${item.size}` : ''}
                                             </p>
-                                            <div className="flex items-center border rounded-md">
+                                            <div className="flex items-center rounded-full border border-black/10 bg-white">
                                                 <button
                                                     onClick={() => updateQuantity(idx, -1)}
-                                                    className="px-2 py-0.5 text-gray-500 hover:text-black hover:bg-gray-100 transition-colors disabled:opacity-30"
+                                                    className="px-2 py-1 text-black/48 transition-colors hover:text-black disabled:opacity-30"
                                                     disabled={item.quantity <= 1}
                                                 >
                                                     <Minus className="w-3 h-3" />
@@ -106,19 +108,19 @@ const CartDrawer = () => {
                                                 <span className="text-xs font-bold text-gray-900 w-4 text-center">{item.quantity}</span>
                                                 <button
                                                     onClick={() => updateQuantity(idx, 1)}
-                                                    className="px-2 py-0.5 text-gray-500 hover:text-black hover:bg-gray-100 transition-colors"
+                                                    className="px-2 py-1 text-black/48 transition-colors hover:text-black"
                                                 >
                                                     <Plus className="w-3 h-3" />
                                                 </button>
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center mt-2">
-                                            <span className="font-bold text-sm">Rs. {(item.price * item.quantity).toLocaleString()}</span>
+                                            <span className="text-sm font-bold text-[#12100d]">Rs. {(item.price * item.quantity).toLocaleString()}</span>
                                             <div className="flex items-center gap-3">
                                                 <button
                                                     onClick={() => deleteFromCart(idx)}
                                                     disabled={removingIndex !== null}
-                                                    className="text-[10px] uppercase font-bold text-gray-400 hover:text-red-500 transition-colors tracking-wider hover:underline"
+                                                    className="text-[10px] font-bold uppercase tracking-wider text-black/36 transition-colors hover:text-red-500 hover:underline"
                                                 >
                                                     REMOVE
                                                 </button>
@@ -126,7 +128,7 @@ const CartDrawer = () => {
                                                 <button
                                                     onClick={() => removeFromCart(idx)}
                                                     disabled={removingIndex !== null}
-                                                    className="text-[10px] uppercase font-bold text-gray-500 hover:text-black transition-colors tracking-wider hover:underline"
+                                                    className="text-[10px] font-bold uppercase tracking-wider text-black/48 transition-colors hover:text-black hover:underline"
                                                 >
                                                     SAVE FOR LATER
                                                 </button>
@@ -140,28 +142,28 @@ const CartDrawer = () => {
 
                     {/* Saved for Later Section */}
                     {wishlist.length > 0 && (
-                        <div className="border-t border-gray-100 pt-6">
-                            <h3 className="font-bold text-sm uppercase tracking-widest mb-4 text-gray-800">
+                        <div className="border-t border-black/10 pt-6">
+                            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-[#12100d]">
                                 SAVED FOR LATER ({wishlist.length})
                             </h3>
                             <div className="space-y-4">
                                 {wishlist.map((item) => (
-                                    <div key={item.id} className="flex gap-4 opacity-75 hover:opacity-100 transition-opacity">
-                                        <img src={item.image} alt={item.title} className="w-16 h-16 object-cover bg-gray-50 rounded grayscale hover:grayscale-0 transition-all" />
+                                    <div key={item.id} className="flex gap-4 opacity-75 transition-opacity hover:opacity-100">
+                                        <img src={item.image} alt={item.title} className="h-16 w-16 rounded-[8px] bg-white object-cover grayscale transition-all hover:grayscale-0" />
                                         <div className="flex-1 flex flex-col justify-center">
                                             <h3 className="text-sm font-medium line-clamp-1">{item.title}</h3>
-                                            <p className="text-xs text-gray-500 mb-1">Rs. {item.price.toLocaleString()}</p>
+                                            <p className="mb-1 text-xs text-black/48">Rs. {item.price.toLocaleString()}</p>
                                             <div className="flex items-center gap-3">
                                                 <button
                                                     onClick={() => moveToCart(item)}
-                                                    className="text-[10px] uppercase font-bold text-gray-500 hover:text-black transition-colors tracking-wider hover:underline"
+                                                    className="text-[10px] font-bold uppercase tracking-wider text-black/48 transition-colors hover:text-black hover:underline"
                                                 >
                                                     MOVE TO CART
                                                 </button>
                                                 <div className="h-3 w-px bg-gray-300"></div>
                                                 <button
                                                     onClick={() => removeFromWishlist(item.id)}
-                                                    className="text-[10px] uppercase font-bold text-gray-400 hover:text-red-500 transition-colors tracking-wider hover:underline"
+                                                    className="text-[10px] font-bold uppercase tracking-wider text-black/36 transition-colors hover:text-red-500 hover:underline"
                                                 >
                                                     REMOVE
                                                 </button>
@@ -176,15 +178,16 @@ const CartDrawer = () => {
 
                 {/* Footer (Total & Checkout) */}
                 {cart.length > 0 && (
-                    <div className="p-4 border-t bg-gray-50">
+                    <div className="safe-bottom border-t border-black/10 bg-white p-4">
                         <div className="flex justify-between mb-4 text-sm">
                             <span className="font-bold">TOTAL</span>
                             <span className="font-bold">Rs. {total.toLocaleString()}</span>
                         </div>
-                        <p className="text-xs text-gray-500 mb-4 text-center">Shipping & taxes calculated at checkout</p>
+                        <p className="mb-4 text-center text-xs text-black/48">Shipping and taxes calculated at checkout</p>
                         <button
+                            type="button"
                             onClick={handleCheckout}
-                            className="w-full bg-green-600 text-white py-3 text-sm font-bold uppercase tracking-widest hover:bg-green-700 transition flex items-center justify-center gap-2"
+                            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#12100d] text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-black"
                         >
                             <MessageCircle className="w-5 h-5" /> Checkout via WhatsApp
                         </button>
