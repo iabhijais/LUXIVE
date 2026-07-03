@@ -33,11 +33,24 @@ const themeInitScript = `
 })();
 `;
 
+const title = "LUXIVE - Premium Luxury E-commerce";
+const description = "India's #1 destination for authentic sneakers, luxury fashion, and premium perfumes. Curated collections of the rarest drops.";
+
 export const metadata: Metadata = {
-  title: "LUXIVE - Premium Luxury E-commerce",
-  description: "India's #1 destination for authentic sneakers, luxury fashion, and premium perfumes. Curated collections of the rarest drops.",
-  icons: {
-    icon: '/luxive-brand-logo.svg',
+  metadataBase: new URL('https://www.luxive.co.in'),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    url: 'https://www.luxive.co.in',
+    siteName: 'LUXIVE',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
   },
 };
 
