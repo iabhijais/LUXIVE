@@ -19,6 +19,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const themeInitScript = `
+(() => {
+  try {
+    const stored = localStorage.getItem('luxive-theme');
+    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const theme = stored === 'dark' || stored === 'light' ? stored : preferred;
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  } catch {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+`;
+
 export const metadata: Metadata = {
   title: "LUXIVE - Premium Luxury E-commerce",
   description: "India's #1 destination for authentic sneakers, luxury fashion, and premium perfumes. Curated collections of the rarest drops.",
@@ -33,10 +47,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <AuthProvider>
           <CartProvider>
             <AnnouncementBar />

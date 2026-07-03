@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server';
 
-// Prioritize the server-side key, fallback to public if that's all that's available (though not recommended)
-const apiKey = process.env.GEMINI_API_KEY?.trim();
-
 // Simple in-memory rate limiting
 const rateLimitMap = new Map<string, number[]>();
 const WINDOW_MS = 60 * 1000; // 1 minute window
 const MAX_REQUESTS = 5; // 5 requests per minute
+const MAX_PROMPT_LENGTH = 8000;
+
+const getClientIp = (request: Request) => {
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    return forwardedFor?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'unknown';
+};
 
 export async function POST(request: Request) {
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
+
     if (!apiKey) {
         console.error("Gemini API Key is missing on server.");
         return NextResponse.json(
@@ -19,7 +24,7 @@ export async function POST(request: Request) {
 
     try {
         // Rate Limiting Logic
-        const ip = request.headers.get('x-forwarded-for') || 'unknown';
+        const ip = getClientIp(request);
         const now = Date.now();
 
         const timestamps = rateLimitMap.get(ip) || [];
@@ -37,22 +42,38 @@ export async function POST(request: Request) {
         recentTimestamps.push(now);
         rateLimitMap.set(ip, recentTimestamps);
 
-        const body = await request.json();
+        const body = await request.json().catch(() => null);
+        if (!body || typeof body !== 'object') {
+            return NextResponse.json(
+                { error: 'Invalid JSON body' },
+                { status: 400 }
+            );
+        }
+
         const { prompt, systemInstruction } = body;
 
-        if (!prompt) {
+        if (typeof prompt !== 'string' || !prompt.trim()) {
             return NextResponse.json(
                 { error: 'Prompt is required' },
                 { status: 400 }
             );
         }
 
-        // Use gemini-2.0-flash-001 as it is the current standard.
+        if (prompt.length > MAX_PROMPT_LENGTH) {
+            return NextResponse.json(
+                { error: 'Prompt is too long' },
+                { status: 400 }
+            );
+        }
+
+        // Keep the model configurable so quota/model availability can be adjusted without redeploying code.
         // We prepend the system instruction to the prompt to ensure maximum compatibility across model versions.
-        const finalPrompt = systemInstruction ? `${systemInstruction}\n\nUser Request: ${prompt}` : prompt;
+        const safeSystemInstruction = typeof systemInstruction === 'string' ? systemInstruction : '';
+        const finalPrompt = safeSystemInstruction ? `${safeSystemInstruction}\n\nUser Request: ${prompt}` : prompt;
+        const model = process.env.GEMINI_MODEL?.trim() || 'gemini-flash-lite-latest';
 
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=${apiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
             {
                 method: 'POST',
                 headers: {
@@ -68,7 +89,7 @@ export async function POST(request: Request) {
             const errorText = await response.text();
             console.error(`Gemini API HTTP error! status: ${response.status}, body: ${errorText}`);
             return NextResponse.json(
-                { error: `Gemini Upstream Error: ${response.status} - ${errorText}` },
+                { error: 'Gemini is temporarily unavailable. Please try again shortly.' },
                 { status: response.status }
             );
         }

@@ -1,65 +1,67 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ArrowRight, ChevronLeft, ChevronRight, ShieldCheck, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+
+type HeroSlide = {
+    id: number;
+    image: string;
+    eyebrow: string;
+    title: string;
+    description: string;
+    primary: { label: string; href: string };
+    secondary?: { label: string; href: string };
+    focus?: string;
+};
+
+const slides: HeroSlide[] = [
+    {
+        id: 1,
+        image: "/Premium Sneakers/Air Jordan 1 Retro High OG ObsidianUniversity Blue 3300 x 6999/14431181_21155388_1000.webp",
+        eyebrow: "Verified Sneaker Vault",
+        title: "Rare drops with a private-store finish.",
+        description: "Air Jordans, LV trainers and hype releases curated for collectors who want the look without the chaos.",
+        primary: { label: "Shop sneakers", href: "/shop/sneakers" },
+        secondary: { label: "View luxury shoes", href: "/shop/luxury" },
+        focus: "center"
+    },
+    {
+        id: 2,
+        image: "/luxury-perfume-banner.png",
+        eyebrow: "Signature Scents",
+        title: "Fragrances that feel custom selected.",
+        description: "A sharper perfume edit for him and her, presented with concierge-style recommendations from LuxeBot.",
+        primary: { label: "For him", href: "/shop/perfumes_him" },
+        secondary: { label: "For her", href: "/shop/perfumes_her" },
+        focus: "center"
+    },
+    {
+        id: 3,
+        image: "/PREMIUM WATCHES MEN/Tag_Heuer Aquaracer GMT Automatic AAA 42000 X 6499/682850dbe2b7c2.jpeg",
+        eyebrow: "Statement Timepieces",
+        title: "Premium watches for daily presence.",
+        description: "Discover bold men's chronographs and elegant women's silhouettes in one curated watch room.",
+        primary: { label: "Men's watches", href: "/shop/watches_him" },
+        secondary: { label: "Women's watches", href: "/shop/watches_her" },
+        focus: "center"
+    }
+];
 
 const HeroSlider = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
 
-    const slides = [
-        {
-            id: 1,
-            image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&q=80&w=1600",
-            sub: "India's #1 Drops",
-            title: "Authentic Sneakers",
-            btn: "SHOP NOW",
-            link: "/shop/sneakers"
-        },
-        {
-            id: 2,
-            image: "/luxury-perfume-banner.png",
-            sub: "Luxury Scents",
-            title: "Premium Perfumes",
-            buttons: [
-                { text: "FOR HIM", link: "/shop/perfumes_him" },
-                { text: "FOR HER", link: "/shop/perfumes_her" }
-            ]
-        },
-        {
-            id: 3,
-            image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&q=80&w=1600",
-            sub: "High-End Fashion",
-            title: "Luxury Shoes",
-            btn: "VIEW COLLECTION",
-            link: "/shop/luxury"
-        },
-        {
-            id: 4,
-            image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=1600",
-            sub: "Timepieces",
-            title: "Exclusive Watches",
-            buttons: [
-                { text: "FOR HIM", link: "/shop/watches_him" },
-                { text: "FOR HER", link: "/shop/watches_her" }
-            ]
-        }
-    ];
-
-    // Auto-slide effect
     useEffect(() => {
-        const timer = setInterval(() => {
+        const timer = window.setInterval(() => {
             setCurrentSlide(prev => (prev + 1) % slides.length);
-        }, 4000);
-        return () => clearInterval(timer);
-    }, [slides.length]);
+        }, 5200);
+        return () => window.clearInterval(timer);
+    }, []);
 
     const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
     const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-
-    // Touch swipe support
-    const [touchStart, setTouchStart] = useState(0);
-    const [touchEnd, setTouchEnd] = useState(0);
 
     const handleTouchStart = (e: React.TouchEvent) => {
         setTouchStart(e.targetTouches[0].clientX);
@@ -72,22 +74,17 @@ const HeroSlider = () => {
     const handleTouchEnd = () => {
         if (!touchStart || !touchEnd) return;
         const distance = touchStart - touchEnd;
-        const isLeftSwipe = distance > 50;
-        const isRightSwipe = distance < -50;
 
-        if (isLeftSwipe) {
-            nextSlide();
-        } else if (isRightSwipe) {
-            prevSlide();
-        }
+        if (distance > 48) nextSlide();
+        if (distance < -48) prevSlide();
 
         setTouchStart(0);
         setTouchEnd(0);
     };
 
     return (
-        <div
-            className="relative w-full h-[50vh] md:h-[70vh] bg-gray-100 overflow-hidden group"
+        <section
+            className="relative isolate h-[calc(100svh-105px)] min-h-[560px] max-h-[820px] overflow-hidden bg-[#12100d] text-white"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -95,63 +92,96 @@ const HeroSlider = () => {
             {slides.map((slide, index) => (
                 <div
                     key={slide.id}
-                    className={`absolute inset-0 transition-opacity duration-1000 ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                    className={`absolute inset-0 transition-opacity duration-1000 ${currentSlide === index ? 'opacity-100' : 'opacity-0'}`}
+                    aria-hidden={currentSlide !== index}
                 >
                     <img
                         src={slide.image}
                         alt={slide.title}
-                        className="w-full h-full object-cover object-center"
+                        className="h-full w-full object-cover"
+                        style={{ objectPosition: slide.focus || 'center' }}
                     />
-                    <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center text-white p-4">
-                        <h2 className="text-xs md:text-lg tracking-[0.2em] font-light mb-2 md:mb-4 uppercase animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-                            {slide.sub}
-                        </h2>
-                        <h1 className="text-3xl md:text-6xl font-black mb-4 md:mb-6 uppercase tracking-tighter animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-                            {slide.title}
-                        </h1>
-                        {slide.buttons ? (
-                            <div className="flex gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-                                {slide.buttons.map((btn, idx) => (
-                                    <Link key={idx} href={btn.link} className="bg-white text-black px-8 py-3 text-sm font-bold tracking-widest hover:bg-black hover:text-white transition-colors duration-300">
-                                        {btn.text}
-                                    </Link>
-                                ))}
-                            </div>
-                        ) : (
-                            <Link href={slide.link} className="bg-white text-black px-8 py-3 text-sm font-bold tracking-widest hover:bg-black hover:text-white transition-colors duration-300 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-                                {slide.btn}
-                            </Link>
-                        )}
-                    </div>
+                    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,16,13,0.9)_0%,rgba(18,16,13,0.62)_38%,rgba(18,16,13,0.2)_72%,rgba(18,16,13,0.55)_100%)]" />
+                    <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#12100d] to-transparent" />
                 </div>
             ))}
 
-            {/* Slide Dots */}
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
-                {slides.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setCurrentSlide(index)}
-                        className={`h-2 rounded-full transition-all duration-300 ${currentSlide === index ? 'bg-white w-8' : 'bg-white/50 w-2 hover:bg-white/80'}`}
-                        aria-label={`Go to slide ${index + 1}`}
-                    />
-                ))}
+            <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-4 py-10 md:px-8">
+                <div className="max-w-3xl">
+                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/82 backdrop-blur">
+                        <ShieldCheck className="h-4 w-4 text-[#d4b45f]" />
+                        {slides[currentSlide].eyebrow}
+                    </div>
+
+                    <h1 className="max-w-4xl text-4xl font-semibold leading-[0.96] tracking-[-0.055em] text-white sm:text-5xl md:text-7xl lg:text-8xl">
+                        {slides[currentSlide].title}
+                    </h1>
+                    <p className="mt-6 max-w-2xl text-base leading-7 text-white/74 md:text-lg">
+                        {slides[currentSlide].description}
+                    </p>
+
+                    <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                        <Link
+                            href={slides[currentSlide].primary.href}
+                            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-7 text-sm font-bold uppercase tracking-[0.18em] text-[#12100d] transition hover:-translate-y-0.5 hover:bg-[#f5efe3]"
+                        >
+                            {slides[currentSlide].primary.label}
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+                        {slides[currentSlide].secondary && (
+                            <Link
+                                href={slides[currentSlide].secondary.href}
+                                className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/28 px-7 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:-translate-y-0.5 hover:bg-white/12"
+                            >
+                                {slides[currentSlide].secondary.label}
+                            </Link>
+                        )}
+                    </div>
+
+                    <div className="mt-10 grid max-w-2xl grid-cols-3 border-y border-white/14 py-4 text-white/82">
+                        {['Verified picks', 'AI stylist', 'WhatsApp concierge'].map((item) => (
+                            <div key={item} className="border-r border-white/12 px-3 first:pl-0 last:border-r-0">
+                                <Sparkles className="mb-2 h-4 w-4 text-[#d4b45f]" />
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] md:text-xs">{item}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
-            {/* Navigation Arrows - Visible on both Mobile and PC */}
-            <button
-                onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/20 text-white hover:bg-black/40 transition z-20 backdrop-blur-sm"
-            >
-                <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-                onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/20 text-white hover:bg-black/40 transition z-20 backdrop-blur-sm"
-            >
-                <ChevronRight className="w-6 h-6" />
-            </button>
-        </div>
+            <div className="absolute bottom-6 left-4 right-4 z-20 mx-auto flex max-w-7xl items-center justify-between md:bottom-8 md:px-4">
+                <div className="flex items-center gap-3">
+                    {slides.map((slide, index) => (
+                        <button
+                            key={slide.id}
+                            type="button"
+                            onClick={() => setCurrentSlide(index)}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === index ? 'w-10 bg-white' : 'w-4 bg-white/35 hover:bg-white/70'}`}
+                            aria-label={`Go to slide ${index + 1}`}
+                        />
+                    ))}
+                </div>
+
+                <div className="hidden gap-3 sm:flex">
+                    <button
+                        type="button"
+                        onClick={prevSlide}
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/22 bg-white/10 text-white backdrop-blur transition hover:bg-white hover:text-[#12100d]"
+                        aria-label="Previous slide"
+                    >
+                        <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={nextSlide}
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/22 bg-white/10 text-white backdrop-blur transition hover:bg-white hover:text-[#12100d]"
+                        aria-label="Next slide"
+                    >
+                        <ChevronRight className="h-5 w-5" />
+                    </button>
+                </div>
+            </div>
+        </section>
     );
 };
 

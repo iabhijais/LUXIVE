@@ -1,7 +1,9 @@
 
 import { createBrowserClient } from '@supabase/ssr'
+import type { AuthChangeEvent } from '@supabase/supabase-js';
 
 const MOCK_STORAGE_KEY = 'luxive_mock_session';
+let hasWarnedAboutMockSupabase = false;
 
 // Simple mock user data
 const MOCK_USER = {
@@ -20,7 +22,23 @@ const MOCK_USER = {
   updated_at: new Date().toISOString(),
 };
 
-const createMockSession = () => ({
+type MockUser = typeof MOCK_USER;
+
+type MockSession = {
+  access_token: string;
+  token_type: 'bearer';
+  expires_in: number;
+  refresh_token: string;
+  user: MockUser;
+  expires_at: number;
+};
+
+type MockAuthCallback = (event: AuthChangeEvent, session: MockSession | null) => void;
+type MockAuthArgs = { email: string; password: string };
+type MockSignUpArgs = MockAuthArgs & { options?: { data?: { full_name?: string; phone?: string } } };
+type MockQueryResponse<T = unknown> = { data: T; error: null };
+
+const createMockSession = (): MockSession => ({
   access_token: 'mock-access-token',
   token_type: 'bearer',
   expires_in: 3600,
@@ -29,14 +47,23 @@ const createMockSession = () => ({
   expires_at: Math.floor(Date.now() / 1000) + 3600,
 });
 
+const getStoredSession = (): MockSession | null => {
+  if (typeof window === 'undefined') return null;
+
+  const stored = localStorage.getItem(MOCK_STORAGE_KEY);
+  return stored ? JSON.parse(stored) : null;
+};
+
 class MockSupabaseClient {
   auth = {
-    getSession: async () => {
-      if (typeof window === 'undefined') return { data: { session: null }, error: null };
-      const stored = localStorage.getItem(MOCK_STORAGE_KEY);
-      return { data: { session: stored ? JSON.parse(stored) : null }, error: null };
+    getUser: async () => {
+      const session = getStoredSession();
+      return { data: { user: session?.user ?? null }, error: null };
     },
-    signInWithPassword: async ({ email, password }: any) => {
+    getSession: async () => {
+      return { data: { session: getStoredSession() }, error: null };
+    },
+    signInWithPassword: async ({ email }: MockAuthArgs) => {
       console.log('Mock Login:', email);
       const session = createMockSession();
       session.user.email = email;
@@ -48,7 +75,7 @@ class MockSupabaseClient {
       // For simplicity, we just return success.
       return { data: { user: session.user, session }, error: null };
     },
-    signUp: async ({ email, password, options }: any) => {
+    signUp: async ({ email, options }: MockSignUpArgs) => {
         console.log('Mock Signup:', email);
         const session = createMockSession();
         session.user.email = email;
@@ -60,6 +87,14 @@ class MockSupabaseClient {
         }
         return { data: { user: session.user, session }, error: null };
     },
+    updateUser: async ({ data }: { data: Record<string, string> }) => {
+      const session = getStoredSession();
+      if (session) {
+        session.user.user_metadata = { ...session.user.user_metadata, ...data };
+        localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(session));
+      }
+      return { data: { user: session?.user ?? null }, error: null };
+    },
     signOut: async () => {
       console.log('Mock Signout');
       if (typeof window !== 'undefined') {
@@ -67,13 +102,13 @@ class MockSupabaseClient {
       }
       return { error: null };
     },
-    onAuthStateChange: (callback: any) => {
+    onAuthStateChange: (callback: MockAuthCallback) => {
       // In a real mock we'd listen to storage events or similar, 
       // but here we just return a dummy subscription.
       // We can immediately fire with current session.
       if (typeof window !== 'undefined') {
-          const stored = localStorage.getItem(MOCK_STORAGE_KEY);
-          if (stored) callback('SIGNED_IN', JSON.parse(stored));
+          const session = getStoredSession();
+          if (session) callback('SIGNED_IN', session);
       }
       
       return {
@@ -85,6 +120,36 @@ class MockSupabaseClient {
       };
     },
   };
+
+  from() {
+    const emptyArrayResponse: MockQueryResponse<unknown[]> = { data: [], error: null };
+    const emptyObjectResponse: MockQueryResponse<null> = { data: null, error: null };
+
+    return {
+      select: () => ({
+        eq: async () => emptyArrayResponse,
+      }),
+      update: () => ({
+        eq: async () => emptyObjectResponse,
+      }),
+      insert: () => ({
+        select: async () => emptyArrayResponse,
+      }),
+      delete: () => ({
+        eq: async () => emptyObjectResponse,
+      }),
+    };
+  }
+
+  rpc = async () => ({ data: null, error: null });
+
+  storage = {
+    from: () => ({
+      remove: async () => ({ data: null, error: null }),
+      upload: async () => ({ data: null, error: null }),
+      getPublicUrl: (path: string) => ({ data: { publicUrl: `/mock-storage/${path}` } }),
+    }),
+  };
 }
 
 export function createClient() {
@@ -94,8 +159,11 @@ export function createClient() {
   // Check if we have valid-looking Supabase credentials. 
   // If they are placeholders or missing, return the Mock Client.
   if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('your-project.supabase.co')) {
-    console.warn('Supabase credentials missing or placeholders detected. Using Mock Supabase Client.');
-    return new MockSupabaseClient() as any;
+    if (!hasWarnedAboutMockSupabase) {
+      console.warn('Supabase credentials missing or placeholders detected. Using Mock Supabase Client.');
+      hasWarnedAboutMockSupabase = true;
+    }
+    return new MockSupabaseClient() as unknown as ReturnType<typeof createBrowserClient>;
   }
 
   return createBrowserClient(supabaseUrl, supabaseKey);

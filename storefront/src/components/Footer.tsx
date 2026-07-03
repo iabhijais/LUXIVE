@@ -1,7 +1,8 @@
 "use client";
 
 import React from 'react';
-import { Instagram, Globe, MessageCircle, X } from 'lucide-react';
+import { Globe, Instagram, MessageCircle, X } from 'lucide-react';
+import Link from 'next/link';
 
 const Footer = () => {
     const [activePolicy, setActivePolicy] = React.useState<{ title: string; content: React.ReactNode } | null>(null);
@@ -10,8 +11,8 @@ const Footer = () => {
         return: {
             title: "Return & Refund Policy",
             content: (
-                <div className="space-y-4 text-gray-600">
-                    <p>At LUXIVE, we want you to be completely satisfied with your purchase. If you're not happy with your order, we're here to help.</p>
+                <div className="space-y-4 text-black/64">
+                    <p>At LUXIVE, we want you to be completely satisfied with your purchase. If you&apos;re not happy with your order, we&apos;re here to help.</p>
                     <h5 className="font-bold text-black">Returns</h5>
                     <p>You have 7 calendar days to return an item from the date you received it. To be eligible for a return, your item must be unused and in the same condition that you received it. Your item must be in the original packaging.</p>
                     <h5 className="font-bold text-black">Refunds</h5>
@@ -24,7 +25,7 @@ const Footer = () => {
         shipping: {
             title: "Shipping Policy",
             content: (
-                <div className="space-y-4 text-gray-600">
+                <div className="space-y-4 text-black/64">
                     <p>Thank you for visiting and shopping at LUXIVE. Following are the terms and conditions that constitute our Shipping Policy.</p>
                     <h5 className="font-bold text-black">Shipment Processing Time</h5>
                     <p>All orders are processed within 2-3 business days. Orders are not shipped or delivered on weekends or holidays.</p>
@@ -38,105 +39,154 @@ const Footer = () => {
         terms: {
             title: "Terms of Service",
             content: (
-                <div className="space-y-4 text-gray-600">
+                <div className="space-y-4 text-black/64">
                     <p>Please read these Terms of Service carefully before accessing or using our website.</p>
                     <h5 className="font-bold text-black">General Conditions</h5>
-                    <p>We reserve the right to refuse service to anyone for any reason at any time. You understand that your content (not including credit card information), may be transferred unencrypted and involve (a) transmissions over various networks; and (b) changes to conform and adapt to technical requirements of connecting networks or devices.</p>
+                    <p>We reserve the right to refuse service to anyone for any reason at any time. You understand that your content, not including credit card information, may be transferred unencrypted and involve transmissions over various networks and changes to conform to technical requirements.</p>
                     <h5 className="font-bold text-black">Products or Services</h5>
                     <p>Certain products or services may be available exclusively online through the website. These products or services may have limited quantities and are subject to return or exchange only according to our Return Policy.</p>
                     <h5 className="font-bold text-black">Accuracy of Billing and Account Information</h5>
-                    <p>We reserve the right to refuse any order you place with us. We may, in our sole discretion, limit or cancel quantities purchased per person, per household or per order.</p>
+                    <p>We reserve the right to refuse any order you place with us. We may limit or cancel quantities purchased per person, household, or order.</p>
                 </div>
             )
         },
         privacy: {
             title: "Privacy Policy",
             content: (
-                <div className="space-y-4 text-gray-600">
-                    <p>Your privacy is important to us. It is LUXIVE's policy to respect your privacy regarding any information we may collect from you across our website.</p>
+                <div className="space-y-4 text-black/64">
+                    <p>Your privacy is important to us. It is LUXIVE&apos;s policy to respect your privacy regarding any information we may collect from you across our website.</p>
                     <h5 className="font-bold text-black">Information We Collect</h5>
                     <p>We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent.</p>
                     <h5 className="font-bold text-black">How We Use Information</h5>
-                    <p>We use the information we collect to operate and maintain our website, send you marketing communications, respond to your comments and questions, and provide customer service.</p>
+                    <p>We use the information we collect to operate and maintain our website, send marketing communications, respond to comments and questions, and provide customer service.</p>
                     <h5 className="font-bold text-black">Security</h5>
-                    <p>We value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure.</p>
+                    <p>We value your trust in providing us your personal information and use commercially acceptable means to protect it.</p>
                 </div>
             )
         }
     };
 
+    const socialLinks = [
+        {
+            label: 'Instagram',
+            href: 'https://www.instagram.com/luxive.premium.zone?igsh=NXlvbHQ0MnpnMzY=',
+            icon: Instagram,
+        },
+        {
+            label: 'Linktree',
+            href: 'https://linktr.ee/luxiveworld?utm_source=linktree_profile_share&ltsid=b647bf37-f1d0-4cd6-a41f-081b55e66c90',
+            icon: Globe,
+        },
+        {
+            label: 'WhatsApp',
+            href: 'https://wa.me/918149409265?text=Hello%20LUXIVE%2C%20I%20would%20like%20to%20join%20the%20community',
+            icon: MessageCircle,
+        },
+    ];
+
     return (
         <>
-            <footer className="bg-white border-t border-gray-200 pt-16 pb-8">
-                <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                    <div>
-                        <h4 className="font-bold text-sm uppercase tracking-widest mb-6">About Us</h4>
-                        <p className="text-sm text-gray-500 leading-relaxed mb-4">
-                            LUXIVE is the ultimate destination for sneaker enthusiasts and luxury connoisseurs. We curate the rarest drops and finest scents to elevate your style game.
-                        </p>
-                    </div>
-                    <div>
-                        <h4 className="font-bold text-sm uppercase tracking-widest mb-6">Store's Policy</h4>
-                        <ul className="space-y-3 text-sm text-gray-500">
-                            <li><button onClick={() => setActivePolicy(policies.return)} className="hover:text-black text-left">Return & Refund Policy</button></li>
-                            <li><button onClick={() => setActivePolicy(policies.shipping)} className="hover:text-black text-left">Shipping Policy</button></li>
-                            <li><button onClick={() => setActivePolicy(policies.terms)} className="hover:text-black text-left">Terms of Service</button></li>
-                            <li><button onClick={() => setActivePolicy(policies.privacy)} className="hover:text-black text-left">Privacy Policy</button></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="font-bold text-sm uppercase tracking-widest mb-6">Follow Us</h4>
-                        <div className="flex space-x-4 text-gray-600 mb-6">
-                            <a href="https://www.instagram.com/luxive.premium.zone?igsh=NXlvbHQ0MnpnMzY=" target="_blank" rel="noopener noreferrer">
-                                <Instagram className="w-5 h-5 hover:text-black cursor-pointer transition-colors" />
-                            </a>
-                            <a href="https://linktr.ee/luxiveworld?utm_source=linktree_profile_share&ltsid=b647bf37-f1d0-4cd6-a41f-081b55e66c90" target="_blank" rel="noopener noreferrer">
-                                <Globe className="w-5 h-5 hover:text-black cursor-pointer transition-colors" />
-                            </a>
-                            <a href="https://wa.me/918149409265?text=Hello%20LUXIVE%2C%20I%20would%20like%20to%20join%20the%20community" target="_blank" rel="noopener noreferrer">
-                                <MessageCircle className="w-5 h-5 hover:text-black cursor-pointer transition-colors" />
-                            </a>
+            <footer className="safe-bottom bg-[#12100d] text-white">
+                <div className="mx-auto max-w-7xl px-4 py-14 md:px-8 md:py-20">
+                    <div className="grid gap-10 md:grid-cols-[1.2fr_0.7fr_0.7fr_0.8fr]">
+                        <div>
+                            <div className="relative mb-5 h-12 w-36 overflow-hidden rounded-[8px] bg-white">
+                                <img src="/luxive-text-black.png" alt="LUXIVE" className="luxive-logo-img absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-[52%] object-contain" />
+                            </div>
+                            <p className="max-w-sm text-sm leading-7 text-white/58">
+                                LUXIVE curates sneakers, luxury shoes, watches and fragrances for shoppers who want a sharper, assisted premium buying experience.
+                            </p>
+                            <div className="mt-6 flex gap-3">
+                                {socialLinks.map(link => {
+                                    const Icon = link.icon;
+
+                                    return (
+                                        <a
+                                            key={link.label}
+                                            href={link.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/12 text-white/72 transition hover:bg-white hover:text-[#12100d]"
+                                            aria-label={link.label}
+                                        >
+                                            <Icon className="h-5 w-5" />
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.22em] text-white">Collections</h4>
+                            <ul className="space-y-3 text-sm text-white/58">
+                                <li><Link href="/shop/sneakers" className="transition hover:text-white">Sneakers</Link></li>
+                                <li><Link href="/shop/luxury" className="transition hover:text-white">Luxury Shoes</Link></li>
+                                <li><Link href="/shop/watches_him" className="transition hover:text-white">Watches</Link></li>
+                                <li><Link href="/shop/perfumes_him" className="transition hover:text-white">Perfumes</Link></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.22em] text-white">Store Policy</h4>
+                            <ul className="space-y-3 text-sm text-white/58">
+                                <li><button type="button" onClick={() => setActivePolicy(policies.return)} className="text-left transition hover:text-white">Return & Refund</button></li>
+                                <li><button type="button" onClick={() => setActivePolicy(policies.shipping)} className="text-left transition hover:text-white">Shipping</button></li>
+                                <li><button type="button" onClick={() => setActivePolicy(policies.terms)} className="text-left transition hover:text-white">Terms of Service</button></li>
+                                <li><button type="button" onClick={() => setActivePolicy(policies.privacy)} className="text-left transition hover:text-white">Privacy Policy</button></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.22em] text-white">Private Community</h4>
+                            <p className="mb-4 text-sm leading-6 text-white/58">
+                                Scan to join the WhatsApp community for early access, styling guidance and drop updates.
+                            </p>
+                            <div className="inline-block rounded-[8px] border border-white/12 bg-white p-2">
+                                <img src="/whatsapp-community-qr.png" alt="WhatsApp Community QR" className="h-32 w-32 object-contain" />
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <h4 className="font-bold text-sm uppercase tracking-widest mb-6">Join our Community</h4>
-                        <p className="text-sm text-gray-500 mb-4">Scan the QR code to join our exclusive WhatsApp community for early access to drops.</p>
-                        <div className="bg-white p-2 border border-gray-100 inline-block rounded-lg shadow-sm">
-                            <img src="/whatsapp-community-qr.png" alt="WhatsApp Community QR" className="w-32 h-32 object-contain" />
-                        </div>
+
+                    <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs uppercase tracking-[0.18em] text-white/38 md:flex-row md:items-center md:justify-between">
+                        <p>© 2025 luxive.co.in. All rights reserved.</p>
+                        <p>Premium commerce experience for India.</p>
                     </div>
-                </div>
-                <div className="container mx-auto px-4 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
-                    <p>© 2025 luxive.co.in. All rights reserved.</p>
                 </div>
             </footer>
 
-            {/* Policy Modal */}
             {activePolicy && (
-                <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 transition-opacity">
-                    <div
-                        className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in duration-200"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="p-6 border-b flex items-center justify-between sticky top-0 bg-white">
-                            <h3 className="text-xl font-bold">{activePolicy.title}</h3>
-                            <button onClick={() => setActivePolicy(null)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                                <X className="w-5 h-5" />
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/62 p-4">
+                    <button
+                        type="button"
+                        className="absolute inset-0 cursor-default"
+                        onClick={() => setActivePolicy(null)}
+                        aria-label="Close policy modal"
+                    />
+                    <div className="relative z-10 flex max-h-[84svh] w-full max-w-2xl flex-col overflow-hidden rounded-[8px] bg-white shadow-2xl">
+                        <div className="flex items-center justify-between border-b border-black/10 bg-white p-5">
+                            <h3 className="text-lg font-bold tracking-[-0.02em] text-[#12100d] md:text-xl">{activePolicy.title}</h3>
+                            <button
+                                type="button"
+                                onClick={() => setActivePolicy(null)}
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/[0.04] transition hover:bg-black/10"
+                                aria-label="Close policy"
+                            >
+                                <X className="h-5 w-5" />
                             </button>
                         </div>
-                        <div className="p-6">
+                        <div className="overflow-y-auto p-5 text-sm leading-6 md:p-6">
                             {activePolicy.content}
                         </div>
-                        <div className="p-6 border-t bg-gray-50 rounded-b-2xl">
+                        <div className="border-t border-black/10 bg-[#fbfbf8] p-5">
                             <button
+                                type="button"
                                 onClick={() => setActivePolicy(null)}
-                                className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-wide hover:bg-gray-900 transition-colors"
+                                className="min-h-12 w-full rounded-full bg-[#12100d] text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-black"
                             >
                                 Close
                             </button>
                         </div>
                     </div>
-                    <div className="absolute inset-0 z-[-1]" onClick={() => setActivePolicy(null)}></div>
                 </div>
             )}
         </>

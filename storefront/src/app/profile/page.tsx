@@ -17,6 +17,8 @@ const INDIAN_STATES = [
     "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
 ];
 
+const getErrorMessage = (error: unknown) => error instanceof Error ? error.message : 'Unknown error';
+
 // Major cities by state
 const CITIES_BY_STATE: { [key: string]: string[] } = {
     "Uttar Pradesh": ["Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut", "Allahabad", "Ghaziabad", "Noida", "Bareilly", "Aligarh", "Moradabad", "Gorakhpur", "Firozabad", "Jhansi", "Muzaffarnagar", "Mathura", "Rampur", "Shahjahanpur", "Farrukhabad", "Ayodhya"],
@@ -701,9 +703,9 @@ export default function ProfilePage() {
 
             alert('Profile updated successfully!');
             setEditing(false);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error updating profile:', error);
-            alert('Error updating profile: ' + (error.message || 'Unknown error'));
+            alert('Error updating profile: ' + getErrorMessage(error));
         } finally {
             setSaving(false);
         }
@@ -764,7 +766,7 @@ export default function ProfilePage() {
             await supabase.storage.from('avatars').remove([filePath]);
 
             // Upload new avatar to Supabase Storage
-            const { data, error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase.storage
                 .from('avatars')
                 .upload(filePath, file, {
                     cacheControl: '3600',
@@ -803,9 +805,9 @@ export default function ProfilePage() {
             console.log("Avatar uploaded successfully:", publicUrl);
             alert('Profile picture updated!');
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Avatar upload error:', error);
-            alert('Error uploading avatar: ' + error.message);
+            alert('Error uploading avatar: ' + getErrorMessage(error));
         } finally {
             setUploading(false);
         }

@@ -3,14 +3,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, X, Send, MessageCircle } from 'lucide-react';
 import { callGemini } from '../utils/gemini';
+import type { Product } from '../types/product';
 
-const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () => void, products: any[] }>(({ isOpen, onClose, products }, ref) => {
-    const [messages, setMessages] = useState([
-        { role: 'assistant', text: "Hello! I'm LuxeBot ✨. I can help you find the perfect sneakers or fragrance from our collection. What's your style?" }
+type ChatMessage = {
+    role: 'assistant' | 'user';
+    text: string;
+};
+
+const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () => void, products: Product[] }>(({ isOpen, onClose, products }, ref) => {
+    const [messages, setMessages] = useState<ChatMessage[]>([
+        { role: 'assistant', text: "Hello, I'm LuxeBot. I can help you find the right sneakers, watch or fragrance from our collection. What's your style brief?" }
     ]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -18,19 +25,23 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
 
     useEffect(scrollToBottom, [messages]);
 
+    useEffect(() => {
+        if (isOpen) {
+            window.setTimeout(() => inputRef.current?.focus(), 100);
+        }
+    }, [isOpen]);
+
     const handleSend = async () => {
-        if (!input.trim()) return;
+        if (!input.trim() || loading) return;
 
         const userMsg = input;
         setInput("");
         setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
         setLoading(true);
 
-        const productContext = JSON.stringify(products.map(p => ({
-            name: p.title,
-            price: p.price,
-            category: p.category
-        })));
+        const productContext = products
+            .map(p => `${p.title} | Rs. ${p.price.toLocaleString()} | ${p.category}`)
+            .join('\n');
 
         const systemPrompt = `You are LuxeBot, a high-end personal stylist for LUXIVE. 
     You are helpful, concise, and fashionable. 
@@ -38,45 +49,49 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
     Recommend specific products from this list when possible. 
     If asked about price, use the prices in the catalog. 
     Do not mention products not in the catalog. 
-    Keep responses short (under 50 words) and use emojis sparingly.`;
+    Keep responses short (under 50 words) and avoid emojis unless the customer uses them first.`;
 
-        const response = await callGemini(userMsg, systemPrompt);
-
-        setMessages(prev => [...prev, { role: 'assistant', text: response }]);
-        setLoading(false);
+        try {
+            const response = await callGemini(userMsg, systemPrompt);
+            setMessages(prev => [...prev, { role: 'assistant', text: response }]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!isOpen) return null;
 
     return (
-        <div ref={ref} className="fixed bottom-24 right-4 w-[90vw] md:w-80 h-[450px] bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
-            <div className="bg-black text-white p-4 flex items-center justify-between">
+        <div ref={ref} className="fixed bottom-[calc(5.75rem+env(safe-area-inset-bottom))] left-4 right-4 z-50 flex h-[min(520px,calc(100svh-8.5rem))] flex-col overflow-hidden rounded-[8px] border border-black/10 bg-white shadow-[0_24px_80px_rgba(18,16,13,0.24)] animate-in slide-in-from-bottom-5 sm:left-auto sm:w-96 sm:max-w-[calc(100vw-2rem)]">
+            <div className="flex items-center justify-between bg-[#12100d] p-4 text-white">
                 <div className="flex items-center gap-2">
-                    <div className="bg-gradient-to-tr from-indigo-500 to-purple-500 p-1.5 rounded-full">
-                        <Sparkles className="w-3 h-3 text-white fill-white" />
+                    <div className="rounded-full border border-white/16 bg-white/10 p-1.5">
+                        <Sparkles className="h-3.5 w-3.5 text-[#d4b45f]" />
                     </div>
-                    <span className="font-bold text-sm tracking-wide">LuxeBot Stylist</span>
+                    <span className="text-sm font-bold tracking-wide">LuxeBot Concierge</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <a
                         href="https://wa.me/918149409265?text=Hello%20LUXIVE%20Stylist%2C%20I%20need%20assistance"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-white hover:text-green-400 transition-colors"
+                        className="text-white/72 transition-colors hover:text-white"
                         title="Chat on WhatsApp"
                     >
                         <MessageCircle className="w-5 h-5" />
                     </a>
-                    <button onClick={onClose}><X className="w-4 h-4 text-gray-300 hover:text-white" /></button>
+                    <button type="button" onClick={onClose} aria-label="Close LuxeBot">
+                        <X className="h-4 w-4 text-white/70 hover:text-white" />
+                    </button>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+            <div className="flex-1 space-y-3 overflow-y-auto bg-[#fbfbf8] p-4">
                 {messages.map((msg, idx) => (
                     <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[80%] p-3 rounded-2xl text-xs leading-5 ${msg.role === 'user'
-                            ? 'bg-black text-white rounded-br-none'
-                            : 'bg-white border border-gray-100 text-gray-800 shadow-sm rounded-bl-none'
+                        <div className={`max-w-[82%] rounded-[8px] p-3 text-xs leading-5 ${msg.role === 'user'
+                            ? 'bg-[#12100d] text-white'
+                            : 'border border-black/10 bg-white text-[#12100d] shadow-sm'
                             }`}>
                             {msg.text}
                         </div>
@@ -84,7 +99,7 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
                 ))}
                 {loading && (
                     <div className="flex justify-start">
-                        <div className="bg-white border border-gray-100 p-3 rounded-2xl rounded-bl-none shadow-sm">
+                        <div className="rounded-[8px] border border-black/10 bg-white p-3 shadow-sm">
                             <div className="flex gap-1">
                                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -96,22 +111,25 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
                 <div ref={messagesEndRef} />
             </div>
 
-            <div className="p-3 bg-white border-t border-gray-100">
+            <div className="border-t border-black/10 bg-white p-3">
                 <div className="flex gap-2">
                     <input
+                        ref={inputRef}
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                         placeholder="Ask for advice..."
-                        className="flex-1 bg-gray-50 text-base md:text-sm px-4 py-2 rounded-full focus:outline-none focus:ring-1 focus:ring-black"
+                        disabled={loading}
+                        className="min-h-11 flex-1 rounded-full bg-[#fbfbf8] px-4 text-base focus:outline-none focus:ring-1 focus:ring-black md:text-sm"
                     />
                     <button
+                        type="button"
                         onClick={handleSend}
                         disabled={loading || !input.trim()}
-                        className="bg-black text-white p-2 rounded-full hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#12100d] text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        <Send className="w-4 h-4" />
+                        <Send className="h-4 w-4" />
                     </button>
                 </div>
             </div>
