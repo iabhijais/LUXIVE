@@ -152,7 +152,7 @@ export default function AuthForm({ type }: AuthFormProps) {
             <button
                 type="submit"
                 disabled={loading}
-                className="mt-4 bg-black dark:bg-white text-white dark:text-black py-2 rounded-md font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-4 bg-black text-white py-2 rounded-md font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {loading ? 'Processing...' : (type === 'login' ? 'Sign In' : 'Sign Up')}
             </button>
