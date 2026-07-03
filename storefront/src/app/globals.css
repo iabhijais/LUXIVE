@@ -39,6 +39,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  min-height: 100%;
 }
 
 body {
@@ -49,6 +50,8 @@ body {
   text-rendering: geometricPrecision;
   overflow-x: hidden;
   transition: background-color 220ms ease, color 220ms ease;
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
 }
 
 button,
@@ -69,6 +72,38 @@ svg,
 video,
 canvas {
   max-width: 100%;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+.product-card-image {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .product-card-image {
+    transform: none;
+    will-change: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 ::selection {

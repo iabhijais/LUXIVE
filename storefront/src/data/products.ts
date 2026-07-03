@@ -411,8 +411,8 @@ export const PRODUCTS: Product[] = [
         "price": 2200,
         "originalPrice": 9999,
         "category": "sweatshirts",
-        "image": "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=800",
-        "hoverImage": "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=800",
+        "image": "/sweatshirts/ralph-v-neck.webp",
+        "hoverImage": "/sweatshirts/ralph-v-neck-hover.webp",
         "badge": ""
     },
     {
@@ -421,18 +421,18 @@ export const PRODUCTS: Product[] = [
         "price": 1950,
         "originalPrice": 9999,
         "category": "sweatshirts",
-        "image": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800",
-        "hoverImage": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800",
+        "image": "/sweatshirts/ralph-imported.webp",
+        "hoverImage": "/sweatshirts/ralph-imported-hover.webp",
         "badge": ""
     },
     {
         "id": 53,
-        "title": "ZARA PREMIUM KNITTED STIRPES PULL OVER BROWN",
+        "title": "ZARA PREMIUM KNITTED STRIPES PULL OVER BROWN",
         "price": 2000,
         "originalPrice": 9999,
         "category": "sweatshirts",
-        "image": "https://images.unsplash.com/photo-1620799139507-2a54f7c3dd05?auto=format&fit=crop&q=80&w=800",
-        "hoverImage": "https://images.unsplash.com/photo-1620799139507-2a54f7c3dd05?auto=format&fit=crop&q=80&w=800",
+        "image": "/sweatshirts/zara-stripes-brown.webp",
+        "hoverImage": "/sweatshirts/zara-stripes-brown-hover.webp",
         "badge": ""
     },
     {
@@ -441,8 +441,8 @@ export const PRODUCTS: Product[] = [
         "price": 3000,
         "originalPrice": 9999,
         "category": "sweatshirts",
-        "image": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=800",
-        "hoverImage": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=800",
+        "image": "/sweatshirts/lv-oversized.webp",
+        "hoverImage": "/sweatshirts/lv-oversized-hover.webp",
         "badge": "Premium"
     },
     {
@@ -451,8 +451,8 @@ export const PRODUCTS: Product[] = [
         "price": 1950,
         "originalPrice": 9999,
         "category": "sweatshirts",
-        "image": "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&q=80&w=800",
-        "hoverImage": "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&q=80&w=800",
+        "image": "/sweatshirts/zara-knit-polo.webp",
+        "hoverImage": "/sweatshirts/zara-knit-polo-hover.webp",
         "badge": ""
     },
     {
@@ -461,8 +461,8 @@ export const PRODUCTS: Product[] = [
         "price": 1950,
         "originalPrice": 9999,
         "category": "sweatshirts",
-        "image": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=80&w=800",
-        "hoverImage": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=80&w=800",
+        "image": "/sweatshirts/zara-knit-polo-brown.webp",
+        "hoverImage": "/sweatshirts/zara-knit-polo-brown-hover.webp",
         "badge": ""
     },
     {
@@ -471,8 +471,8 @@ export const PRODUCTS: Product[] = [
         "price": 1950,
         "originalPrice": 9999,
         "category": "sweatshirts",
-        "image": "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&q=80&w=800",
-        "hoverImage": "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&q=80&w=800",
+        "image": "/sweatshirts/zara-knit-polo.webp",
+        "hoverImage": "/sweatshirts/zara-knit-polo-hover.webp",
         "badge": ""
     },
     {
@@ -481,8 +481,8 @@ export const PRODUCTS: Product[] = [
         "price": 2200,
         "originalPrice": 9999,
         "category": "sweatshirts",
-        "image": "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=800",
-        "hoverImage": "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=800",
+        "image": "/sweatshirts/ralph-v-neck.webp",
+        "hoverImage": "/sweatshirts/ralph-v-neck-hover.webp",
         "badge": ""
     },
     {

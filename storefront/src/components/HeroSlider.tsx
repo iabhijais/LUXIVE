@@ -18,7 +18,7 @@ type HeroSlide = {
 const slides: HeroSlide[] = [
     {
         id: 1,
-        image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&q=88&w=1800",
+        image: "/Premium Sneakers/Air Jordan 1 Retro High OG ObsidianUniversity Blue 3300 x 6999/14431181_21155388_1000.webp",
         eyebrow: "Verified Sneaker Vault",
         title: "Rare drops with a private-store finish.",
         description: "Air Jordans, LV trainers and hype releases curated for collectors who want the look without the chaos.",
@@ -38,7 +38,7 @@ const slides: HeroSlide[] = [
     },
     {
         id: 3,
-        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=88&w=1800",
+        image: "/PREMIUM WATCHES MEN/Tag_Heuer Aquaracer GMT Automatic AAA 42000 X 6499/682850dbe2b7c2.jpeg",
         eyebrow: "Statement Timepieces",
         title: "Premium watches for daily presence.",
         description: "Discover bold men's chronographs and elegant women's silhouettes in one curated watch room.",

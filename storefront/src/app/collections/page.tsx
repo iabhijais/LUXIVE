@@ -12,7 +12,7 @@ const COLLECTION_IMAGES: Record<string, string> = {
     perfumes_him: '/creed-aventus.png',
     watches_him: '/PREMIUM WATCHES MEN/Tag_Heuer Aquaracer GMT Automatic AAA 42000 X 6499/682850dbe2b7c2.jpeg',
     watches_her: '/PREMIUM WATCHES WOMEN/Role_x Oyester Perpetual Date Just Copper-Green 13000 X 4999/69303df056b3b1.jpg',
-    sweatshirts: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=86&w=1200',
+    sweatshirts: '/sweatshirts/zara-knit-polo-brown.webp',
 };
 
 export default function CollectionsPage() {

@@ -66,7 +66,13 @@ const ProductCard = ({ product, onGetTips }: ProductCardProps) => {
                     <img
                         src={isHovered && product.hoverImage ? product.hoverImage : product.image}
                         alt={product.title}
-                        className="h-full w-full object-contain p-5 transition duration-700 group-hover:scale-105 md:p-7"
+                        width={900}
+                        height={1100}
+                        loading="lazy"
+                        decoding="async"
+                        sizes="(max-width: 767px) 50vw, (max-width: 1279px) 25vw, 300px"
+                        draggable={false}
+                        className="product-card-image h-full w-full object-contain p-5 transition duration-500 group-hover:scale-[1.035] md:p-7"
                     />
                 </Link>
 
