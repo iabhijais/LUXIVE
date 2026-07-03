@@ -1,12 +1,12 @@
 "use client";
 
 import React from 'react';
-import { X, ShoppingBag, Heart, Trash2, Minus, Plus, MessageCircle } from 'lucide-react';
+import { X, ShoppingBag, Trash2, Minus, Plus, MessageCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import Link from 'next/link';
 
 const CartDrawer = () => {
-    const { cart, removeFromCart, deleteFromCart, updateQuantity, clearCart, wishlist, moveToCart, removeFromWishlist, addToWishlist, isCartOpen, toggleCart, removingIndex, isClearing } = useCart();
+    const { cart, removeFromCart, deleteFromCart, updateQuantity, clearCart, wishlist, moveToCart, removeFromWishlist, isCartOpen, toggleCart, removingIndex, isClearing } = useCart();
     const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
     const handleCheckout = () => {

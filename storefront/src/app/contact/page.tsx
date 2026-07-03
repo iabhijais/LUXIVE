@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Loader2 } from 'lucide-react';
+import { Mail, Phone, Send, Loader2 } from 'lucide-react';
 
 export default function ContactPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +40,7 @@ export default function ContactPage() {
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight">CONTACT US</h1>
                 <p className="text-gray-500 text-center mb-12 max-w-2xl mx-auto">
-                    Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+                    Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -80,7 +80,7 @@ export default function ContactPage() {
                                     <Send className="w-8 h-8 text-green-600" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-green-900 mb-2">Message Sent!</h3>
-                                <p className="text-green-700">Thank you for contacting us. We'll get back to you shortly.</p>
+                                <p className="text-green-700">Thank you for contacting us. We&apos;ll get back to you shortly.</p>
                                 <button
                                     onClick={() => setSubmitted(false)}
                                     className="mt-6 text-sm font-semibold text-green-700 hover:text-green-800 underline"

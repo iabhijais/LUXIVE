@@ -5,7 +5,6 @@ import { Search, User, ShoppingBag, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import SearchModal from './SearchModal';
 
 const Navbar = () => {
@@ -16,6 +15,7 @@ const Navbar = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [cartBounce, setCartBounce] = useState(false);
     const router = useRouter();
+    const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -23,14 +23,13 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Watch for cart changes and trigger bounce
     useEffect(() => {
         if (cart.length > 0) {
             setCartBounce(true);
             const timer = setTimeout(() => setCartBounce(false), 500);
             return () => clearTimeout(timer);
         }
-    }, [cart.reduce((acc, item) => acc + item.quantity, 0)]);
+    }, [cart.length, cartItemCount]);
 
     const handleUserClick = () => {
         if (user) {
@@ -164,7 +163,7 @@ const Navbar = () => {
                         <ShoppingBag className="w-5 h-5 hover:text-black transition-transform duration-200 group-hover:scale-110 text-gray-600" />
                         {cart.length > 0 && (
                             <span className="absolute -top-2 -right-2 bg-black text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
-                                {cart.reduce((acc, item) => acc + item.quantity, 0)}
+                                {cartItemCount}
                             </span>
                         )}
                         <span className="absolute top-full pt-2 right-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">

@@ -24,7 +24,7 @@ const Testimonials = () => {
                     </div>
                 </div>
                 <p className="text-lg md:text-xl font-light italic mb-8 leading-relaxed">
-                    "{TESTIMONIALS[index].text}"
+                    &quot;{TESTIMONIALS[index].text}&quot;
                 </p>
                 <p className="font-bold tracking-widest text-sm uppercase text-gray-400 mb-8">
                     - {TESTIMONIALS[index].author}

@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 import { callGemini } from '../utils/gemini';
+import type { Product } from '../types/product';
 import HeroSlider from '../components/HeroSlider';
 import ProductCard from '../components/ProductCard';
 import Testimonials from '../components/Testimonials';
@@ -15,11 +15,11 @@ import StyleTipsModal from '../components/StyleTipsModal';
 export default function Home() {
 
   const [styleTipsModalOpen, setStyleTipsModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [styleTips, setStyleTips] = useState("");
   const [loadingTips, setLoadingTips] = useState(false);
 
-  const handleGetStyleTips = async (product: any) => {
+  const handleGetStyleTips = async (product: Product) => {
     setSelectedProduct(product);
     setStyleTipsModalOpen(true);
     setLoadingTips(true);

@@ -11,7 +11,7 @@ const Footer = () => {
             title: "Return & Refund Policy",
             content: (
                 <div className="space-y-4 text-gray-600">
-                    <p>At LUXIVE, we want you to be completely satisfied with your purchase. If you're not happy with your order, we're here to help.</p>
+                    <p>At LUXIVE, we want you to be completely satisfied with your purchase. If you&apos;re not happy with your order, we&apos;re here to help.</p>
                     <h5 className="font-bold text-black">Returns</h5>
                     <p>You have 7 calendar days to return an item from the date you received it. To be eligible for a return, your item must be unused and in the same condition that you received it. Your item must be in the original packaging.</p>
                     <h5 className="font-bold text-black">Refunds</h5>
@@ -53,7 +53,7 @@ const Footer = () => {
             title: "Privacy Policy",
             content: (
                 <div className="space-y-4 text-gray-600">
-                    <p>Your privacy is important to us. It is LUXIVE's policy to respect your privacy regarding any information we may collect from you across our website.</p>
+                    <p>Your privacy is important to us. It is LUXIVE&apos;s policy to respect your privacy regarding any information we may collect from you across our website.</p>
                     <h5 className="font-bold text-black">Information We Collect</h5>
                     <p>We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent.</p>
                     <h5 className="font-bold text-black">How We Use Information</h5>
@@ -76,7 +76,7 @@ const Footer = () => {
                         </p>
                     </div>
                     <div>
-                        <h4 className="font-bold text-sm uppercase tracking-widest mb-6">Store's Policy</h4>
+                        <h4 className="font-bold text-sm uppercase tracking-widest mb-6">Store&apos;s Policy</h4>
                         <ul className="space-y-3 text-sm text-gray-500">
                             <li><button onClick={() => setActivePolicy(policies.return)} className="hover:text-black text-left">Return & Refund Policy</button></li>
                             <li><button onClick={() => setActivePolicy(policies.shipping)} className="hover:text-black text-left">Shipping Policy</button></li>

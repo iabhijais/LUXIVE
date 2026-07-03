@@ -4,18 +4,7 @@ import React, { useState } from 'react';
 import { Sparkles, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
-
-interface Product {
-    id: number;
-    title: string;
-    price: number;
-    originalPrice: number;
-    category: string;
-    image: string;
-    hoverImage?: string;
-    badge?: string;
-    gallery?: string[];
-}
+import type { Product } from '../types/product';
 
 interface ProductCardProps {
     product: Product;

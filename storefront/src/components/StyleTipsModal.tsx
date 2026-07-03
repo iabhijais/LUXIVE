@@ -3,8 +3,9 @@
 import React from 'react';
 import { X, Sparkles, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import type { Product } from '../types/product';
 
-const StyleTipsModal = ({ product, isOpen, onClose, tips, loading }: { product: any, isOpen: boolean, onClose: () => void, tips: string, loading: boolean }) => {
+const StyleTipsModal = ({ product, isOpen, onClose, tips, loading }: { product: Product, isOpen: boolean, onClose: () => void, tips: string, loading: boolean }) => {
     if (!isOpen) return null;
 
     return (
@@ -41,9 +42,18 @@ const StyleTipsModal = ({ product, isOpen, onClose, tips, loading }: { product: 
                         <div className="prose prose-sm max-w-none prose-p:mb-3 prose-ul:my-2 prose-li:my-1 prose-strong:text-black prose-strong:font-bold">
                             <ReactMarkdown
                                 components={{
-                                    ul: ({ node, ...props }) => <ul className="list-disc pl-5 space-y-1 marker:text-gray-300" {...props} />,
-                                    li: ({ node, ...props }) => <li className="pl-1" {...props} />,
-                                    strong: ({ node, ...props }) => <span className="font-bold text-black" {...props} />,
+                                    ul: ({ node, ...props }) => {
+                                        void node;
+                                        return <ul className="list-disc pl-5 space-y-1 marker:text-gray-300" {...props} />;
+                                    },
+                                    li: ({ node, ...props }) => {
+                                        void node;
+                                        return <li className="pl-1" {...props} />;
+                                    },
+                                    strong: ({ node, ...props }) => {
+                                        void node;
+                                        return <span className="font-bold text-black" {...props} />;
+                                    },
                                 }}
                             >
                                 {tips}

@@ -6,19 +6,20 @@ import { PRODUCTS } from '../../../data/products';
 import ProductCard from '../../../components/ProductCard';
 import { callGemini } from '../../../utils/gemini';
 import StyleTipsModal from '../../../components/StyleTipsModal';
+import type { Product } from '../../../types/product';
 
 export default function CategoryPage() {
     const params = useParams();
     const category = params.category as string;
 
     const [styleTipsModalOpen, setStyleTipsModalOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<any>(null);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [styleTips, setStyleTips] = useState("");
     const [loadingTips, setLoadingTips] = useState(false);
 
     const products = PRODUCTS.filter(p => p.category === category);
 
-    const handleGetStyleTips = async (product: any) => {
+    const handleGetStyleTips = async (product: Product) => {
         setSelectedProduct(product);
         setStyleTipsModalOpen(true);
         setLoadingTips(true);
@@ -37,6 +38,8 @@ export default function CategoryPage() {
             case 'luxury': return 'LUXURY FASHION';
             case 'perfumes_her': return 'PERFUMES FOR HER';
             case 'perfumes_him': return 'PERFUMES FOR HIM';
+            case 'watches_him': return 'WATCHES FOR HIM';
+            case 'watches_her': return 'WATCHES FOR HER';
             case 'sweatshirts': return 'PREMIUM SWEATSHIRTS';
             default: return cat.replace('_', ' ').toUpperCase();
         }

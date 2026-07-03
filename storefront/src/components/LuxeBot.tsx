@@ -3,14 +3,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, X, Send, MessageCircle } from 'lucide-react';
 import { callGemini } from '../utils/gemini';
+import type { Product } from '../types/product';
 
-const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () => void, products: any[] }>(({ isOpen, onClose, products }, ref) => {
-    const [messages, setMessages] = useState([
+type ChatMessage = {
+    role: 'assistant' | 'user';
+    text: string;
+};
+
+const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () => void, products: Product[] }>(({ isOpen, onClose, products }, ref) => {
+    const [messages, setMessages] = useState<ChatMessage[]>([
         { role: 'assistant', text: "Hello! I'm LuxeBot ✨. I can help you find the perfect sneakers or fragrance from our collection. What's your style?" }
     ]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -18,19 +25,23 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
 
     useEffect(scrollToBottom, [messages]);
 
+    useEffect(() => {
+        if (isOpen) {
+            window.setTimeout(() => inputRef.current?.focus(), 100);
+        }
+    }, [isOpen]);
+
     const handleSend = async () => {
-        if (!input.trim()) return;
+        if (!input.trim() || loading) return;
 
         const userMsg = input;
         setInput("");
         setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
         setLoading(true);
 
-        const productContext = JSON.stringify(products.map(p => ({
-            name: p.title,
-            price: p.price,
-            category: p.category
-        })));
+        const productContext = products
+            .map(p => `${p.title} | Rs. ${p.price.toLocaleString()} | ${p.category}`)
+            .join('\n');
 
         const systemPrompt = `You are LuxeBot, a high-end personal stylist for LUXIVE. 
     You are helpful, concise, and fashionable. 
@@ -40,16 +51,18 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
     Do not mention products not in the catalog. 
     Keep responses short (under 50 words) and use emojis sparingly.`;
 
-        const response = await callGemini(userMsg, systemPrompt);
-
-        setMessages(prev => [...prev, { role: 'assistant', text: response }]);
-        setLoading(false);
+        try {
+            const response = await callGemini(userMsg, systemPrompt);
+            setMessages(prev => [...prev, { role: 'assistant', text: response }]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!isOpen) return null;
 
     return (
-        <div ref={ref} className="fixed bottom-24 right-4 w-[90vw] md:w-80 h-[450px] bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
+        <div ref={ref} className="fixed bottom-24 left-4 right-4 sm:left-auto sm:w-96 sm:max-w-[calc(100vw-2rem)] h-[min(450px,calc(100vh-8rem))] bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
             <div className="bg-black text-white p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <div className="bg-gradient-to-tr from-indigo-500 to-purple-500 p-1.5 rounded-full">
@@ -67,7 +80,9 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
                     >
                         <MessageCircle className="w-5 h-5" />
                     </a>
-                    <button onClick={onClose}><X className="w-4 h-4 text-gray-300 hover:text-white" /></button>
+                    <button onClick={onClose} aria-label="Close LuxeBot">
+                        <X className="w-4 h-4 text-gray-300 hover:text-white" />
+                    </button>
                 </div>
             </div>
 
@@ -99,11 +114,13 @@ const LuxeBot = React.forwardRef<HTMLDivElement, { isOpen: boolean, onClose: () 
             <div className="p-3 bg-white border-t border-gray-100">
                 <div className="flex gap-2">
                     <input
+                        ref={inputRef}
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                         placeholder="Ask for advice..."
+                        disabled={loading}
                         className="flex-1 bg-gray-50 text-base md:text-sm px-4 py-2 rounded-full focus:outline-none focus:ring-1 focus:ring-black"
                     />
                     <button

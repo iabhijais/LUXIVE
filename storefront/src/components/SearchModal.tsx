@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { X, Search as SearchIcon, ArrowRight, Clock, Trash2, Flame, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { X, Search as SearchIcon, Clock, Trash2, Flame, Sparkles } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 import Link from 'next/link';
 
@@ -12,34 +12,34 @@ interface SearchModalProps {
 
 const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
     const [query, setQuery] = useState("");
-    const [results, setResults] = useState<typeof PRODUCTS>([]);
-    const [recentSearches, setRecentSearches] = useState<string[]>([]);
+    const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+        if (typeof window === 'undefined') return [];
+
+        try {
+            const saved = localStorage.getItem('recentSearches');
+            return saved ? JSON.parse(saved) : [];
+        } catch {
+            return [];
+        }
+    });
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Initial focus and load recent searches
     useEffect(() => {
         if (isOpen && inputRef.current) {
             setTimeout(() => inputRef.current?.focus(), 100);
-            const saved = localStorage.getItem('recentSearches');
-            if (saved) {
-                setRecentSearches(JSON.parse(saved));
-            }
         }
     }, [isOpen]);
 
-    // Search Logic
-    useEffect(() => {
+    const results = useMemo(() => {
         if (query.trim() === "") {
-            setResults([]);
-            return;
+            return [];
         }
 
-        const filtered = PRODUCTS.filter(product =>
-            product.title.toLowerCase().includes(query.toLowerCase()) ||
-            product.category.toLowerCase().includes(query.toLowerCase())
+        const normalizedQuery = query.toLowerCase();
+        return PRODUCTS.filter(product =>
+            product.title.toLowerCase().includes(normalizedQuery) ||
+            product.category.toLowerCase().includes(normalizedQuery)
         ).slice(0, 6); // Limit to 6 results
-
-        setResults(filtered);
     }, [query]);
 
     // Handle Escape key
@@ -220,7 +220,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                         <div className="max-w-6xl mx-auto">
                             {results.length === 0 ? (
                                 <div className="text-center py-20 text-gray-400">
-                                    <p className="text-xl">No results found for "{query}"</p>
+                                    <p className="text-xl">No results found for &quot;{query}&quot;</p>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 mt-4">

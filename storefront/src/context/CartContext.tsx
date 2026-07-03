@@ -4,14 +4,13 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
+import type { Product } from '../types/product';
 
-type Product = {
+type CartDbItem = {
     id: number;
-    title: string;
-    price: number;
-    image: string;
-    category: string;
-    [key: string]: any;
+    product_id: number;
+    quantity: number;
+    size?: string;
 };
 
 type CartItem = Product & {
@@ -117,7 +116,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         if (data && data.length > 0) {
             const { PRODUCTS } = await import('../data/products');
 
-            const fullCartItems = data.map((item: any) => {
+            const fullCartItems = (data as CartDbItem[]).map((item) => {
                 const product = PRODUCTS.find(p => p.id == item.product_id);
                 if (product) {
                     return {
@@ -358,8 +357,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             localStorage.setItem('cart', JSON.stringify(currentCart));
         }
     };
-
-    const getRemovingIndex = () => removingIndex;
 
     const toggleCart = () => setIsCartOpen((prev) => !prev);
 

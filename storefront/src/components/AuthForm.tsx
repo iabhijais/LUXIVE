@@ -9,6 +9,8 @@ type AuthFormProps = {
     type: 'login' | 'signup';
 };
 
+const getErrorMessage = (err: unknown) => err instanceof Error ? err.message : 'An error occurred during authentication.';
+
 export default function AuthForm({ type }: AuthFormProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -72,9 +74,9 @@ export default function AuthForm({ type }: AuthFormProps) {
                 if (error) throw error;
                 window.location.href = '/';
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Authentication error:', err);
-            setError(err.message || 'An error occurred during authentication.');
+            setError(getErrorMessage(err));
             setLoading(false);
         }
     };
@@ -158,7 +160,7 @@ export default function AuthForm({ type }: AuthFormProps) {
             <div className="text-center text-sm text-zinc-500 mt-2">
                 {type === 'login' ? (
                     <>
-                        Don't have an account?{' '}
+                        Don&apos;t have an account?{' '}
                         <a href="/signup" className="text-black dark:text-white hover:underline">Sign up</a>
                     </>
                 ) : (

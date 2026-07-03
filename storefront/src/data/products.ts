@@ -1,3 +1,5 @@
+import type { Product } from '../types/product';
+
 export const COLLECTIONS = [
     { id: 'sneakers', title: 'AUTHENTIC SNEAKERS', subtitle: 'Premium Sneakers', link: '/shop/sneakers' },
     { id: 'luxury', title: 'LUXURY', subtitle: 'High-End Fashion', link: '/shop/luxury' },
@@ -8,7 +10,7 @@ export const COLLECTIONS = [
     { id: 'sweatshirts', title: 'PREMIUM SWEATSHIRTS', subtitle: 'Cozy Luxury', link: '/shop/sweatshirts' },
 ];
 
-export const PRODUCTS = [
+export const PRODUCTS: Product[] = [
     {
         "id": 101,
         "title": "Air Jordan 1 Retro High OG ObsidianUniversity Blue",

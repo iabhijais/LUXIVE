@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { PRODUCTS } from '../../../data/products';
 import { useCart } from '../../../context/CartContext';
 import { callGemini } from '../../../utils/gemini';
-import { Sparkles, ShoppingBag, Truck, ShieldCheck, ArrowRight, Heart, Share2 } from 'lucide-react';
+import { Sparkles, ShoppingBag, Truck, ShieldCheck, Heart, Share2 } from 'lucide-react';
 import StyleTipsModal from '../../../components/StyleTipsModal';
 import ProductCard from '../../../components/ProductCard';
 import ProductGallery from '../../../components/ProductGallery';
@@ -20,6 +20,7 @@ export default function ProductPage() {
     const [styleTips, setStyleTips] = useState("");
     const [loadingTips, setLoadingTips] = useState(false);
     const [selectedSize, setSelectedSize] = useState("");
+    const needsSize = product ? ['sneakers', 'luxury', 'shoes'].includes(product.category.toLowerCase()) : false;
 
     if (!product) {
         return (
@@ -52,8 +53,7 @@ export default function ProductPage() {
     };
 
     const handleAddToCart = async () => {
-        // Validate Size for Sneakers/Shoes
-        if ((product.category.toLowerCase() === 'sneakers' || product.category.toLowerCase() === 'shoes') && !selectedSize) {
+        if (needsSize && !selectedSize) {
             alert('Please select a size');
             return;
         }
@@ -69,7 +69,7 @@ export default function ProductPage() {
     };
 
     const handleBuyNow = async () => {
-        if ((product.category.toLowerCase() === 'sneakers' || product.category.toLowerCase() === 'shoes') && !selectedSize) {
+        if (needsSize && !selectedSize) {
             alert('Please select a size');
             return;
         }
@@ -148,7 +148,7 @@ export default function ProductPage() {
                             </p>
 
                             {/* Size Selector (Mock) - Only for shoes */}
-                            {(product.category === 'sneakers' || product.category === 'luxury') && (
+                            {needsSize && (
                                 <div>
                                     <h3 className="text-sm font-bold uppercase tracking-widest mb-3">Select Size</h3>
                                     <div className="flex flex-wrap gap-3">
